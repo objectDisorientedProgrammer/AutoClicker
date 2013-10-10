@@ -58,8 +58,8 @@ public class AutoClicker extends JFrame
 	private int xcoord = 0;
 	private int ycoord = 0;
 	private JLabel mouseCoords;
-	private int mouseUpdateDelay = 50; // in milliseconds
-	private int clickDelay = 500; // in milliseconds
+	private int mouseUpdateDelay = 50;	// in milliseconds
+	private int clickDelay = 500;		// in milliseconds
 	private int clickCount = 0;
 	private boolean running = false;
 	private boolean runThread = false;
@@ -70,8 +70,10 @@ public class AutoClicker extends JFrame
 	private String runningString = "Running";
 	private String startBtnString = "Start ";
 	private String startBtnHotkeyString = "(F6)";
+	private int startHotKey = KeyEvent.VK_F6;
 	private String stopBtnString = "Stop ";
 	private String stopBtnHotkeyString = "(F7)";
+	private int stopHotKey = KeyEvent.VK_F7;
 	private String clickSpeedString = "Click delay (milliseconds):";
 	private Robot robot;
 	private Thread clickThread;
@@ -81,29 +83,31 @@ public class AutoClicker extends JFrame
 	public AutoClicker()
 	{
 		super();
+		setFrameAttributes();
+
+		createAndShowGUI();
+		// get mouse location and display on window
+		updateMousePosition();
+		// Enable hotkeys
+		setupHotkeys();
+
+		setVisible(true);
+	}
+
+	private void setFrameAttributes()
+	{
 		setTitle(programName + version);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(frameWidth, frameHeight); // set frame size
-		setLocationRelativeTo(null);
+		setSize(frameWidth, frameHeight);	// set frame size
+		setLocationRelativeTo(null);		// display in the center of the screen
+	}
 
-		/*
-		 * ActionListener clearTextFieldOnFocus = new ActionListener() {
-		 * 
-		 * @Override public void actionPerformed(ActionEvent e) {
-		 * if(e.getSource() instanceof JTextField) ((AbstractButton)
-		 * e.getSource()).setText(""); } };
-		 */
-
+	private void createAndShowGUI()
+	{
 		// create xcoord button
 		xcoordTF = new JTextField(4);
 		xcoordTF.setBounds(36, 39, 38, 20);
 		xcoordTF.setText("" + xcoord);
-		/*
-		 * xcoordTF.addActionListener(new ActionListener() {
-		 * 
-		 * @Override public void actionPerformed(ActionEvent e) {
-		 * xcoordTF.setText(""); } });
-		 */
 
 		// create xcoord label
 		xcoordLbl = new JLabel(xcoordTFString);
@@ -113,12 +117,6 @@ public class AutoClicker extends JFrame
 		ycoordTF = new JTextField(4);
 		ycoordTF.setBounds(110, 39, 38, 20);
 		ycoordTF.setText("" + ycoord);
-		/*
-		 * ycoordTF.addActionListener(new ActionListener() {
-		 * 
-		 * @Override public void actionPerformed(ActionEvent e) {
-		 * ycoordTF.setText(""); } });
-		 */
 
 		// create ycoord label
 		ycoordLbl = new JLabel(ycoordTFString);
@@ -141,17 +139,7 @@ public class AutoClicker extends JFrame
 				startClicking();
 			}
 		});
-		/*
-		 * startBtn.addKeyListener(new KeyListener() {
-		 * 
-		 * @Override public void keyTyped(KeyEvent e) {}
-		 * 
-		 * @Override public void keyReleased(KeyEvent e) {}
-		 * 
-		 * @Override public void keyPressed(KeyEvent e) { if(e.getKeyCode() ==
-		 * KeyEvent.VK_F6) startClicking(); } });
-		 */
-
+		
 		// create stop button
 		stopBtn = new JButton(stopBtnString + stopBtnHotkeyString);
 		stopBtn.setBounds(127, 113, 101, 35);
@@ -178,10 +166,12 @@ public class AutoClicker extends JFrame
 		// clickSpeedTF.addActionListener(clearTextFieldOnFocus);
 		getContentPane().add(clickSpeedTF);
 
+		// Click counter label
 		clickCountLbl = new JLabel("" + clickCount);
 		clickCountLbl.setHorizontalAlignment(SwingConstants.RIGHT);
 		clickCountLbl.setBounds(147, 60, 50, 14);
 
+		// Click test button
 		clickTestBtn = new JButton(clickTestBtnString);
 		clickTestBtn.setBounds(207, 38, 90, 23);
 		clickTestBtn.addActionListener(new ActionListener()
@@ -194,6 +184,7 @@ public class AutoClicker extends JFrame
 			}
 		});
 
+		// Reset button for click count
 		resetClickCountBtn = new JButton(resetClickString);
 		resetClickCountBtn.setBounds(207, 71, 90, 23);
 		resetClickCountBtn.addActionListener(new ActionListener()
@@ -206,10 +197,9 @@ public class AutoClicker extends JFrame
 			}
 		});
 
+		// Label to display current mouse location.
 		mouseCoords = new JLabel("");
 		mouseCoords.setBounds(250, 118, 82, 23);
-		// get mouse location and display on window
-		updateMousePosition();
 
 		// add all components
 		getContentPane().add(xcoordLbl);
@@ -223,12 +213,6 @@ public class AutoClicker extends JFrame
 		getContentPane().add(clickTestBtn);
 		getContentPane().add(resetClickCountBtn);
 		getContentPane().add(mouseCoords);
-
-		// Enable hotkeys
-		setupHotkeys();
-		
-
-		setVisible(true);
 	}
 
 	public void updateMousePosition()
@@ -260,7 +244,7 @@ public class AutoClicker extends JFrame
 		updateMouseCoords.start();
 	}
 
-	protected void autoclick()
+	private void autoclick()
 	{
 		clickThread = new Thread(new Runnable()
 		{
@@ -310,15 +294,15 @@ public class AutoClicker extends JFrame
 	    });*/
 
 	    InputMap keyMap = new ComponentInputMap((JComponent) getContentPane());
-	    keyMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), "action_start");	// F6 key pressed, start clicking
-	    keyMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0), "action_stop");	// F7 key pressed, stop clicking
+	    keyMap.put(KeyStroke.getKeyStroke(startHotKey, 0), "action_start");	// F6 key pressed, start clicking
+	    keyMap.put(KeyStroke.getKeyStroke(stopHotKey , 0), "action_stop");	// F7 key pressed, stop clicking
 	    //keyMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F8, 0), "action_getMouseCoords");	// F8 key pressed, get mouse coords
 	    SwingUtilities.replaceUIActionMap((JComponent) getContentPane(), actionMap);
 	    SwingUtilities.replaceUIInputMap((JComponent) getContentPane(), JComponent.WHEN_IN_FOCUSED_WINDOW,
 	            keyMap);
 	}
 	
-	protected void startClicking()
+	private void startClicking()
 	{
 		xcoord = Integer.parseInt(xcoordTF.getText());
 		ycoord = Integer.parseInt(ycoordTF.getText());
@@ -341,7 +325,7 @@ public class AutoClicker extends JFrame
 					JOptionPane.ERROR_MESSAGE);
 	}
 
-	protected void stopClicking()
+	private void stopClicking()
 	{
 		runThread = false;
 		running = false;
