@@ -3,22 +3,23 @@
  * By          : Douglas Chidester
  * Description : Click many times in one spot
  * Version	   : v0.10 [9/14/2011]
- * Last Update : v0.91 [5/29/13]
+ * Last Update : v0.97 [10/11/13]
  * 
  * Updates:
  * [3/4/13] - added actionlisteners to start/stop button, split program into 2 classes, made the program click at (x,y),
  * 			  display mouse location in a label, align GUI
  * 
  * [5/29/13] - implemented hotkeys for start (F6) and stop (F7).
- * 
+ * [10/11/13] - get and save mouse location with hotkey F8
  * To Do:
- *  get and save mouse location with hotkey F8
+ *  
  */
 
 package com.localarea.network.doug;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.HeadlessException;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.PointerInfo;
@@ -49,7 +50,7 @@ public class AutoClicker extends JFrame
 	private int frameWidth = 350;
 	private int frameHeight = 200;
 	private String programName = "Auto Clicker";
-	private String version = " v0.91";
+	private String version = " v0.97";
 
 	private JTextField xcoordTF, ycoordTF, clickSpeedTF;
 	private JLabel xcoordLbl, ycoordLbl, clickSpeedLbl, clickCountLbl,
@@ -58,6 +59,9 @@ public class AutoClicker extends JFrame
 	private int xcoord = 0;
 	private int ycoord = 0;
 	private JLabel mouseCoords;
+	private int mouseX = 0;
+	private int mouseY = 0;
+	private int getMouseCoordsHotKey = KeyEvent.VK_F8;
 	private int mouseUpdateDelay = 50;	// in milliseconds
 	private int clickDelay = 500;		// in milliseconds
 	private int clickCount = 0;
@@ -79,6 +83,7 @@ public class AutoClicker extends JFrame
 	private Thread clickThread;
 	private String clickTestBtnString = "Test";
 	private String resetClickString = "Reset";
+	
 
 	public AutoClicker()
 	{
@@ -150,7 +155,6 @@ public class AutoClicker extends JFrame
 			{
 				stopClicking();
 			}
-
 		});
 		getContentPane().setLayout(null);
 
@@ -272,6 +276,10 @@ public class AutoClicker extends JFrame
 
 	private void setupHotkeys()
 	{
+		InputMap keyMap = new ComponentInputMap((JComponent) getContentPane());
+		
+		// Start clicking when hotkey is pressed
+		keyMap.put(KeyStroke.getKeyStroke(startHotKey, 0), "action_start");
 		ActionMap actionMap = new ActionMapUIResource();
 	    actionMap.put("action_start", new AbstractAction() {
 	        @Override
@@ -279,24 +287,36 @@ public class AutoClicker extends JFrame
 	            startClicking();
 	        }
 	    });
+	    
+	    // Stop clicking when hotkey is pressed
+	    keyMap.put(KeyStroke.getKeyStroke(stopHotKey , 0), "action_stop");
 	    actionMap.put("action_stop", new AbstractAction() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
 	            stopClicking();
 	        }
 	    });
-	    //add F8 to get current mouse coords and put into textfields
-	    /*actionMap.put("action_getMouseCoords", new AbstractAction() {
+	    
+	    // Get current mouse coords and put into textfields
+	    keyMap.put(KeyStroke.getKeyStroke(getMouseCoordsHotKey , 0), "action_getMouseCoords");
+	    actionMap.put("action_getMouseCoords", new AbstractAction() {
 	        @Override
-	        public void actionPerformed(ActionEvent e) {
-	            // get mouse location
+	        public void actionPerformed(ActionEvent e)
+	        {
+	            try
+				{
+					PointerInfo pi = MouseInfo.getPointerInfo();
+					mouseX = pi.getLocation().x;
+					mouseY = pi.getLocation().y;
+					xcoordTF.setText(mouseX + "");
+					ycoordTF.setText(mouseY + "");
+				} catch(HeadlessException e1)
+				{
+					e1.printStackTrace();
+				}
 	        }
-	    });*/
-
-	    InputMap keyMap = new ComponentInputMap((JComponent) getContentPane());
-	    keyMap.put(KeyStroke.getKeyStroke(startHotKey, 0), "action_start");	// F6 key pressed, start clicking
-	    keyMap.put(KeyStroke.getKeyStroke(stopHotKey , 0), "action_stop");	// F7 key pressed, stop clicking
-	    //keyMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F8, 0), "action_getMouseCoords");	// F8 key pressed, get mouse coords
+	    });
+	    
 	    SwingUtilities.replaceUIActionMap((JComponent) getContentPane(), actionMap);
 	    SwingUtilities.replaceUIInputMap((JComponent) getContentPane(), JComponent.WHEN_IN_FOCUSED_WINDOW,
 	            keyMap);
