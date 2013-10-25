@@ -89,13 +89,11 @@ public class AutoClicker extends JFrame
 	{
 		super();
 		setFrameAttributes();
-
 		createAndShowGUI();
 		// get mouse location and display on window
 		updateMousePosition();
 		// Enable hotkeys
 		setupHotkeys();
-
 		setVisible(true);
 	}
 
@@ -205,7 +203,11 @@ public class AutoClicker extends JFrame
 		mouseCoords = new JLabel("");
 		mouseCoords.setBounds(250, 118, 82, 23);
 
-		// add all components
+		addAllComponentsToFrame();
+	}
+
+	private void addAllComponentsToFrame()
+	{
 		getContentPane().add(xcoordLbl);
 		getContentPane().add(xcoordTF);
 		getContentPane().add(ycoordLbl);
@@ -219,6 +221,9 @@ public class AutoClicker extends JFrame
 		getContentPane().add(mouseCoords);
 	}
 
+	/**
+	 * Constantly get the mouse X and Y coordinates and update the textfield that displays them.
+	 */
 	public void updateMousePosition()
 	{
 		Thread updateMouseCoords = new Thread(new Runnable()
@@ -248,6 +253,9 @@ public class AutoClicker extends JFrame
 		updateMouseCoords.start();
 	}
 
+	/**
+	 * Move the mouse to the user specified location and left click.
+	 */
 	private void autoclick()
 	{
 		clickThread = new Thread(new Runnable()
@@ -297,8 +305,8 @@ public class AutoClicker extends JFrame
 	        }
 	    });
 	    
-	    // Get current mouse coords and put into textfields
-	    keyMap.put(KeyStroke.getKeyStroke(getMouseCoordsHotKey , 0), "action_getMouseCoords");
+	    // Get current mouse coords and put into textfields when F8 is pressed
+	    keyMap.put(KeyStroke.getKeyStroke(getMouseCoordsHotKey, 0), "action_getMouseCoords");
 	    actionMap.put("action_getMouseCoords", new AbstractAction() {
 	        @Override
 	        public void actionPerformed(ActionEvent e)
@@ -340,7 +348,8 @@ public class AutoClicker extends JFrame
 				clickStatusLbl.setText(runningString);
 				autoclick();
 			}
-		} else
+		}
+		else
 			JOptionPane.showMessageDialog(null, needXYmsg, "Coordinate Error",
 					JOptionPane.ERROR_MESSAGE);
 	}
