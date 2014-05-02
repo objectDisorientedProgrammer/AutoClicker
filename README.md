@@ -1,5 +1,5 @@
 AutoClicker
 ===========
-Give the program some coordinates of where you want the mouse to click and set a delay time between clicks, then click the 'run' button.
+This program will click automatically given coordinates and a click delay time.
 
 author Doug Chidester
