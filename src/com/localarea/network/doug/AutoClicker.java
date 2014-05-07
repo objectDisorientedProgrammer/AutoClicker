@@ -181,7 +181,7 @@ public class AutoClicker extends JFrame
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				clickCount++;
+				++clickCount;
 				clickCountLbl.setText("" + clickCount);
 			}
 		});
@@ -234,7 +234,7 @@ public class AutoClicker extends JFrame
 			@Override
 			public void run()
 			{
-				while(true)
+				while(1)
 				{
 					try
 					{
