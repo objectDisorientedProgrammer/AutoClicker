@@ -50,7 +50,7 @@ public class AutoClicker extends JFrame
 	private int frameWidth = 350;
 	private int frameHeight = 200;
 	private String programName = "Auto Clicker";
-	private String version = " v0.97";
+	private String version = " v0.98";
 
 	private JTextField xcoordTF, ycoordTF, clickSpeedTF;
 	private JLabel xcoordLbl, ycoordLbl, clickSpeedLbl, clickCountLbl,
@@ -103,6 +103,7 @@ public class AutoClicker extends JFrame
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(frameWidth, frameHeight);	// set frame size
 		setLocationRelativeTo(null);		// display in the center of the screen
+		getContentPane().setBackground(new Color(200, 230, 230));
 	}
 
 	private void createAndShowGUI()
@@ -175,7 +176,7 @@ public class AutoClicker extends JFrame
 
 		// Click test button
 		clickTestBtn = new JButton(clickTestBtnString);
-		clickTestBtn.setBounds(207, 38, 90, 23);
+		clickTestBtn.setBounds(208, 38, 90, 23);
 		clickTestBtn.addActionListener(new ActionListener()
 		{
 			@Override
@@ -188,7 +189,7 @@ public class AutoClicker extends JFrame
 
 		// Reset button for click count
 		resetClickCountBtn = new JButton(resetClickString);
-		resetClickCountBtn.setBounds(207, 71, 90, 23);
+		resetClickCountBtn.setBounds(208, 71, 90, 23);
 		resetClickCountBtn.addActionListener(new ActionListener()
 		{
 			@Override
@@ -228,24 +229,22 @@ public class AutoClicker extends JFrame
 	{
 		Thread updateMouseCoords = new Thread(new Runnable()
 		{
-			PointerInfo mouseInfo;
 			Point mouseXY;
 
 			@Override
 			public void run()
 			{
-				while(1)
+				while(true)
 				{
 					try
 					{
-						mouseInfo = MouseInfo.getPointerInfo();
-						mouseXY = mouseInfo.getLocation();
+						mouseXY = MouseInfo.getPointerInfo().getLocation();
 						Thread.sleep(mouseUpdateDelay);
 						mouseCoords.setText((int) mouseXY.getX() + ", "
 								+ (int) mouseXY.getY());
 					} catch(InterruptedException e)
 					{
-						e.printStackTrace();
+						mouseCoords.setText(e.getMessage());
 					}
 				}
 			}
