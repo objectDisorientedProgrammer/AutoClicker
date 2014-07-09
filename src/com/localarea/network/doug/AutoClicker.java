@@ -19,6 +19,7 @@ package com.localarea.network.doug;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -32,12 +33,17 @@ import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.ComponentInputMap;
+import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
@@ -45,22 +51,23 @@ import javax.swing.SwingUtilities;
 import javax.swing.plaf.ActionMapUIResource;
 
 @SuppressWarnings("serial")
-public class AutoClicker extends JFrame
+public class AutoClicker
 {
-	private int frameWidth = 350;
-	private int frameHeight = 200;
+	private int frameWidth = 240;
+	private int frameHeight = 270;
 	private String programName = "Auto Clicker";
-	private String version = " v0.98";
+	private String version = " v0.99.0b";
+	private String author = "Douglas Chidester";
 
 	private JTextField xcoordTF, ycoordTF, clickSpeedTF;
-	private JLabel xcoordLbl, ycoordLbl, clickSpeedLbl, clickCountLbl,
-			clickStatusLbl;
+	private JLabel xcoordLbl, ycoordLbl, clickSpeedLbl, clickCountLbl, clickStatusLbl;
 	private JButton startBtn, stopBtn, clickTestBtn, resetClickCountBtn;
 	private int xcoord = 0;
 	private int ycoord = 0;
 	private JLabel mouseCoords;
 	private int mouseX = 0;
 	private int mouseY = 0;
+	private String getMouseCoordsHotkeyString = "(F8)";
 	private int getMouseCoordsHotKey = KeyEvent.VK_F8;
 	private int mouseUpdateDelay = 50;	// in milliseconds
 	private int clickDelay = 500;		// in milliseconds
@@ -78,35 +85,92 @@ public class AutoClicker extends JFrame
 	private String stopBtnString = "Stop ";
 	private String stopBtnHotkeyString = "(F7)";
 	private int stopHotKey = KeyEvent.VK_F7;
-	private String clickSpeedString = "Click delay (milliseconds):";
+	private String clickSpeedString = "Click delay:";
 	private Robot robot;
 	private Thread clickThread;
 	private String clickTestBtnString = "Test";
 	private String resetClickString = "Reset";
 	
-
+	private JFrame mainWindow;
+	private JPanel mainWindowPanel;
+	private String imagePath = "/images/";	// path in jar file
+	private String hotkeyMessage = "Hotkeys:\n" + startBtnHotkeyString + " to start.\n" + stopBtnHotkeyString + " to stop.\n"
+			 + getMouseCoordsHotkeyString + " to get the current mouse position.\n\n";
+	private String clickDelayMessage = "Click Delay:\nDelay time is in milliseconds (ms).";
+	
 	public AutoClicker()
 	{
 		super();
 		setFrameAttributes();
-		createAndShowGUI();
+		
+		createGUIelements();
+		createAndAddMenuBar();
+		addAllComponentsToFrame();
 		// get mouse location and display on window
 		updateMousePosition();
 		// Enable hotkeys
 		setupHotkeys();
-		setVisible(true);
+		
+		mainWindow.setVisible(true);
 	}
 
+	private void createAndAddMenuBar()
+	{
+		JMenuBar menuBar = new JMenuBar();
+		mainWindow.setJMenuBar(menuBar);
+		
+		JMenu fileMenu = new JMenu("File");
+		fileMenu.setMnemonic(KeyEvent.VK_F);
+		menuBar.add(fileMenu);
+		
+		JMenuItem quitMenuItem = new JMenuItem("Quit", new ImageIcon(this.getClass().getResource(imagePath+"exit.png")));
+		quitMenuItem.setMnemonic(KeyEvent.VK_Q);
+		fileMenu.add(quitMenuItem);
+		
+		JMenu helpMenu = new JMenu("Help");
+		helpMenu.setMnemonic(KeyEvent.VK_H);
+		menuBar.add(helpMenu);
+		
+		JMenuItem helpMenuItem = new JMenuItem("Basic Information", new ImageIcon(this.getClass().getResource(imagePath+"help.png")));
+		helpMenuItem.setMnemonic(KeyEvent.VK_G);
+		helpMenuItem.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				// show basic use instructions if user clicks: Help -> Getting Started
+                JOptionPane.showMessageDialog(null, hotkeyMessage+clickDelayMessage, "Usage",
+						JOptionPane.PLAIN_MESSAGE, new ImageIcon(this.getClass().getResource(imagePath+"help64.png")));
+			}
+		});
+		helpMenu.add(helpMenuItem);
+		
+		JMenuItem aboutMenuItem = new JMenuItem("About", new ImageIcon(this.getClass().getResource(imagePath+"about.png")));
+		aboutMenuItem.setMnemonic(KeyEvent.VK_A);
+		aboutMenuItem.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				// show author and version if user clicks: Help -> About
+				JOptionPane.showMessageDialog(null, "Created by " + author + "\nVersion " + version, "About",
+						JOptionPane.INFORMATION_MESSAGE, new ImageIcon(this.getClass().getResource(imagePath+"person.png")));
+			}
+		});
+		helpMenu.add(aboutMenuItem);
+	}
+	
 	private void setFrameAttributes()
 	{
-		setTitle(programName + version);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(frameWidth, frameHeight);	// set frame size
-		setLocationRelativeTo(null);		// display in the center of the screen
-		getContentPane().setBackground(new Color(200, 230, 230));
+		mainWindow = new JFrame(programName);
+		mainWindowPanel = new JPanel(new GridLayout(0, 2, 5, 5));	// rows, cols, horiz gap, vert gap
+		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainWindow.setSize(frameWidth, frameHeight);	// set frame size
+		mainWindow.setLocationRelativeTo(null);		// display in the center of the screen
+		mainWindowPanel.setBackground(new Color(200, 230, 230));
 	}
 
-	private void createAndShowGUI()
+	private void createGUIelements()
 	{
 		// create xcoord button
 		xcoordTF = new JTextField(4);
@@ -133,7 +197,7 @@ public class AutoClicker extends JFrame
 		clickStatusLbl.setBounds(28, 75, 89, 20);
 
 		// create start button
-		startBtn = new JButton(startBtnString + startBtnHotkeyString);
+		startBtn = new JButton(startBtnString);
 		startBtn.setBounds(10, 113, 107, 35);
 		startBtn.addActionListener(new ActionListener()
 		{
@@ -145,7 +209,7 @@ public class AutoClicker extends JFrame
 		});
 		
 		// create stop button
-		stopBtn = new JButton(stopBtnString + stopBtnHotkeyString);
+		stopBtn = new JButton(stopBtnString);
 		stopBtn.setBounds(127, 113, 101, 35);
 		stopBtn.addActionListener(new ActionListener()
 		{
@@ -155,19 +219,18 @@ public class AutoClicker extends JFrame
 				stopClicking();
 			}
 		});
-		getContentPane().setLayout(null);
 
 		// Label for delay TF
 		clickSpeedLbl = new JLabel(clickSpeedString);
 		clickSpeedLbl.setBounds(10, 9, 185, 14);
-		getContentPane().add(clickSpeedLbl);
+		mainWindowPanel.add(clickSpeedLbl);
 
 		// Textfield for time delay
 		clickSpeedTF = new JTextField(4);
 		clickSpeedTF.setBounds(195, 6, 102, 20);
 		clickSpeedTF.setText("" + clickDelay);
 		// clickSpeedTF.addActionListener(clearTextFieldOnFocus);
-		getContentPane().add(clickSpeedTF);
+		mainWindowPanel.add(clickSpeedTF);
 
 		// Click counter label
 		clickCountLbl = new JLabel("" + clickCount);
@@ -204,22 +267,24 @@ public class AutoClicker extends JFrame
 		mouseCoords = new JLabel("");
 		mouseCoords.setBounds(250, 118, 82, 23);
 
-		addAllComponentsToFrame();
+		//addAllComponentsToFrame();
 	}
 
 	private void addAllComponentsToFrame()
 	{
-		getContentPane().add(xcoordLbl);
-		getContentPane().add(xcoordTF);
-		getContentPane().add(ycoordLbl);
-		getContentPane().add(ycoordTF);
-		getContentPane().add(clickStatusLbl);
-		getContentPane().add(startBtn);
-		getContentPane().add(stopBtn);
-		getContentPane().add(clickCountLbl);
-		getContentPane().add(clickTestBtn);
-		getContentPane().add(resetClickCountBtn);
-		getContentPane().add(mouseCoords);
+		mainWindowPanel.add(xcoordLbl);
+		mainWindowPanel.add(xcoordTF);
+		mainWindowPanel.add(ycoordLbl);
+		mainWindowPanel.add(ycoordTF);
+		mainWindowPanel.add(clickStatusLbl);
+		mainWindowPanel.add(startBtn);
+		mainWindowPanel.add(stopBtn);
+		mainWindowPanel.add(clickCountLbl);
+		mainWindowPanel.add(clickTestBtn);
+		mainWindowPanel.add(resetClickCountBtn);
+		mainWindowPanel.add(mouseCoords);
+		
+		mainWindow.add(mainWindowPanel);
 	}
 
 	/**
@@ -283,7 +348,7 @@ public class AutoClicker extends JFrame
 
 	private void setupHotkeys()
 	{
-		InputMap keyMap = new ComponentInputMap((JComponent) getContentPane());
+		InputMap keyMap = new ComponentInputMap((JComponent) mainWindowPanel);
 		
 		// Start clicking when hotkey is pressed
 		keyMap.put(KeyStroke.getKeyStroke(startHotKey, 0), "action_start");
@@ -324,8 +389,8 @@ public class AutoClicker extends JFrame
 	        }
 	    });
 	    
-	    SwingUtilities.replaceUIActionMap((JComponent) getContentPane(), actionMap);
-	    SwingUtilities.replaceUIInputMap((JComponent) getContentPane(), JComponent.WHEN_IN_FOCUSED_WINDOW,
+	    SwingUtilities.replaceUIActionMap((JComponent) mainWindowPanel, actionMap);
+	    SwingUtilities.replaceUIInputMap((JComponent) mainWindowPanel, JComponent.WHEN_IN_FOCUSED_WINDOW,
 	            keyMap);
 	}
 	

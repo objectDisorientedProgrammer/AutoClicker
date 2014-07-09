@@ -9,10 +9,14 @@
 
 package com.localarea.network.doug;
 
-public class Main
+public class Driver
 {
 	public static void main(String args[])
 	{
-		new AutoClicker();
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+            	new AutoClicker();
+            }
+        });
 	}
 }
