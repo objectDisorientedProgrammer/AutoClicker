@@ -1,18 +1,17 @@
 /* File        : AutoClicker.java
  * Created     : September 14, 2011 [9/14/2011]
  * By          : Douglas Chidester
- * Description : Click many times in one spot
- * Version	   : v0.10 [9/14/2011]
- * Last Update : v0.97 [10/11/13]
+ * Description : Click many times in one spot.
+ * Version	   : v0.99.5b [7/29/2014]
+ * Last Update : v0.99.5b [7/29/2014]
  * 
  * Updates:
  * [3/4/13] - added actionlisteners to start/stop button, split program into 2 classes, made the program click at (x,y),
- * 			  display mouse location in a label, align GUI
- * 
+ * 			  display mouse location in a label, align GUI.
  * [5/29/13] - implemented hotkeys for start (F6) and stop (F7).
  * [10/11/13] - get and save mouse location with hotkey F8
  * To Do:
- *  
+ *   - see github issues
  */
 
 package com.localarea.network.doug;
@@ -23,7 +22,6 @@ import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.MouseInfo;
 import java.awt.Point;
-import java.awt.PointerInfo;
 import java.awt.Robot;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -56,7 +54,7 @@ public class AutoClicker
 	private int frameWidth = 240;
 	private int frameHeight = 270;
 	private String programName = "Auto Clicker";
-	private String version = " v0.99.4b";
+	private String version = " v0.99.5b";
 	private String author = "Douglas Chidester";
 
 	private JTextField xcoordTF, ycoordTF, clickSpeedTF;
@@ -72,8 +70,8 @@ public class AutoClicker
 	private int mouseUpdateDelay = 50;	// in milliseconds
 	private int clickDelay = 500;		// in milliseconds
 	private int clickCount = 0;
-	private boolean running = false;
-	private boolean runThread = false;
+	private boolean running = false;	// control the autoclick() thread
+	private boolean validCoords = false;// x & y coords are greater than zero
 	private String needXYmsg = "Please enter an x and y coordinate greater than 0.";
 	private String xcoordTFString = "x:";
 	private String ycoordTFString = "y:";
@@ -93,10 +91,12 @@ public class AutoClicker
 	
 	private JFrame mainWindow;
 	private JPanel mainWindowPanel;
-	private String imagePath = "/images/";	// path in jar file
+	private String imagePath = "/images/";	// path in jar file for images
 	private String hotkeyMessage = "Hotkeys:\n" + startBtnHotkeyString + " to start.\n" + stopBtnHotkeyString + " to stop.\n"
 			 + getMouseCoordsHotkeyString + " to get the current mouse position.\n\n";
 	private String clickDelayMessage = "Click Delay:\nDelay time is in milliseconds (ms).";
+	
+	private boolean getMouse = false; // control the updateMousePosition() thread
 	
 	public AutoClicker()
 	{
@@ -107,6 +107,7 @@ public class AutoClicker
 		createAndAddMenuBar();
 		addAllComponentsToFrame();
 		// get mouse location and display on window
+		getMouse = true;
 		updateMousePosition();
 		// Enable hotkeys
 		setupHotkeys();
@@ -129,6 +130,7 @@ public class AutoClicker
 		{
 		    public void actionPerformed(ActionEvent ae)
 		    {
+		    	getMouse = false;
 		        mainWindow.dispose(); // close program if user clicks: File -> Quit
 		    }
 		});
@@ -138,7 +140,7 @@ public class AutoClicker
 		helpMenu.setMnemonic(KeyEvent.VK_H);
 		menuBar.add(helpMenu);
 		
-		JMenuItem helpMenuItem = new JMenuItem("Basic Information", new ImageIcon(this.getClass().getResource(imagePath+"help.png")));
+		JMenuItem helpMenuItem = new JMenuItem("Hints", new ImageIcon(this.getClass().getResource(imagePath+"help.png")));
 		helpMenuItem.setMnemonic(KeyEvent.VK_G);
 		helpMenuItem.addActionListener(new ActionListener()
 		{
@@ -146,7 +148,7 @@ public class AutoClicker
 			public void actionPerformed(ActionEvent e)
 			{
 				// show basic use instructions if user clicks: Help -> Getting Started
-                JOptionPane.showMessageDialog(null, hotkeyMessage+clickDelayMessage, "Usage",
+                JOptionPane.showMessageDialog(null, hotkeyMessage+clickDelayMessage, "Tips & Tricks",
 						JOptionPane.PLAIN_MESSAGE, new ImageIcon(this.getClass().getResource(imagePath+"help64.png")));
 			}
 		});
@@ -174,7 +176,7 @@ public class AutoClicker
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainWindow.setSize(frameWidth, frameHeight);	// set frame size
 		mainWindow.setLocationRelativeTo(null);		// display in the center of the screen
-		mainWindowPanel.setBackground(new Color(200, 230, 230));
+		mainWindowPanel.setBackground(new Color(200, 200, 200));
 	}
 
 	private void createGUIelements()
@@ -295,7 +297,7 @@ public class AutoClicker
 			@Override
 			public void run()
 			{
-				while(true)
+				while(getMouse)
 				{
 					try
 					{
@@ -329,9 +331,9 @@ public class AutoClicker
 					robot.mouseMove(xcoord, ycoord);
 					while(running)
 					{
-						robot.delay(clickDelay); // in ms
 						robot.mousePress(InputEvent.BUTTON1_MASK);
 						robot.mouseRelease(InputEvent.BUTTON1_MASK);
+						robot.delay(clickDelay); // in ms
 					}
 				} catch(Exception e2)
 				{
@@ -373,9 +375,9 @@ public class AutoClicker
 	        {
 	            try
 				{
-					PointerInfo pi = MouseInfo.getPointerInfo();
-					mouseX = pi.getLocation().x;
-					mouseY = pi.getLocation().y;
+					Point pi = MouseInfo.getPointerInfo().getLocation();
+					mouseX = pi.x;
+					mouseY = pi.y;
 					xcoordTF.setText(mouseX + "");
 					ycoordTF.setText(mouseY + "");
 				} catch(HeadlessException e1)
@@ -386,8 +388,7 @@ public class AutoClicker
 	    });
 	    
 	    SwingUtilities.replaceUIActionMap((JComponent) mainWindowPanel, actionMap);
-	    SwingUtilities.replaceUIInputMap((JComponent) mainWindowPanel, JComponent.WHEN_IN_FOCUSED_WINDOW,
-	            keyMap);
+	    SwingUtilities.replaceUIInputMap((JComponent) mainWindowPanel, JComponent.WHEN_IN_FOCUSED_WINDOW, keyMap);
 	}
 	
 	private void startClicking()
@@ -399,8 +400,8 @@ public class AutoClicker
 		// check for valid coordinates
 		if(xcoord > 0 && ycoord > 0)
 		{
-			runThread = true;
-			if(runThread)
+			validCoords = true;
+			if(validCoords)
 			{
 				running = true;
 				// update status
@@ -416,7 +417,7 @@ public class AutoClicker
 
 	private void stopClicking()
 	{
-		runThread = false;
+		validCoords = false;
 		running = false;
 		// dont keep changing the text if its already stopped
 		if(!clickStatusLbl.getText().equals(stoppedString))
