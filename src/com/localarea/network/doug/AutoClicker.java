@@ -56,7 +56,7 @@ public class AutoClicker
 	private int frameWidth = 240;
 	private int frameHeight = 270;
 	private String programName = "Auto Clicker";
-	private String version = " v0.99.0b";
+	private String version = " v0.99.4b";
 	private String author = "Douglas Chidester";
 
 	private JTextField xcoordTF, ycoordTF, clickSpeedTF;
@@ -125,6 +125,13 @@ public class AutoClicker
 		
 		JMenuItem quitMenuItem = new JMenuItem("Quit", new ImageIcon(this.getClass().getResource(imagePath+"exit.png")));
 		quitMenuItem.setMnemonic(KeyEvent.VK_Q);
+		quitMenuItem.addActionListener(new ActionListener()
+		{
+		    public void actionPerformed(ActionEvent ae)
+		    {
+		        mainWindow.dispose(); // close program if user clicks: File -> Quit
+		    }
+		});
 		fileMenu.add(quitMenuItem);
 		
 		JMenu helpMenu = new JMenu("Help");
@@ -174,31 +181,28 @@ public class AutoClicker
 	{
 		// create xcoord button
 		xcoordTF = new JTextField(4);
-		xcoordTF.setBounds(36, 39, 38, 20);
 		xcoordTF.setText("" + xcoord);
 
 		// create xcoord label
 		xcoordLbl = new JLabel(xcoordTFString);
-		xcoordLbl.setBounds(10, 42, 16, 15);
+		xcoordLbl.setHorizontalAlignment(JLabel.RIGHT);
 
 		// create ycoord button
 		ycoordTF = new JTextField(4);
-		ycoordTF.setBounds(110, 39, 38, 20);
 		ycoordTF.setText("" + ycoord);
 
 		// create ycoord label
 		ycoordLbl = new JLabel(ycoordTFString);
-		ycoordLbl.setBounds(84, 42, 16, 15);
+		ycoordLbl.setHorizontalAlignment(JLabel.RIGHT);
 
 		// create label to show status of app (running or not)
 		clickStatusLbl = new JLabel(stoppedString);
 		clickStatusLbl.setForeground(Color.red);
 		clickStatusLbl.setFont(new Font("Tahoma", Font.BOLD, 15));
-		clickStatusLbl.setBounds(28, 75, 89, 20);
+		clickStatusLbl.setHorizontalAlignment(JLabel.CENTER);
 
 		// create start button
 		startBtn = new JButton(startBtnString);
-		startBtn.setBounds(10, 113, 107, 35);
 		startBtn.addActionListener(new ActionListener()
 		{
 			@Override
@@ -210,7 +214,6 @@ public class AutoClicker
 		
 		// create stop button
 		stopBtn = new JButton(stopBtnString);
-		stopBtn.setBounds(127, 113, 101, 35);
 		stopBtn.addActionListener(new ActionListener()
 		{
 			@Override
@@ -222,24 +225,19 @@ public class AutoClicker
 
 		// Label for delay TF
 		clickSpeedLbl = new JLabel(clickSpeedString);
-		clickSpeedLbl.setBounds(10, 9, 185, 14);
-		mainWindowPanel.add(clickSpeedLbl);
+		clickSpeedLbl.setHorizontalAlignment(JLabel.RIGHT);
 
 		// Textfield for time delay
 		clickSpeedTF = new JTextField(4);
-		clickSpeedTF.setBounds(195, 6, 102, 20);
 		clickSpeedTF.setText("" + clickDelay);
 		// clickSpeedTF.addActionListener(clearTextFieldOnFocus);
-		mainWindowPanel.add(clickSpeedTF);
 
 		// Click counter label
 		clickCountLbl = new JLabel("" + clickCount);
 		clickCountLbl.setHorizontalAlignment(SwingConstants.RIGHT);
-		clickCountLbl.setBounds(147, 60, 50, 14);
 
 		// Click test button
 		clickTestBtn = new JButton(clickTestBtnString);
-		clickTestBtn.setBounds(208, 38, 90, 23);
 		clickTestBtn.addActionListener(new ActionListener()
 		{
 			@Override
@@ -252,7 +250,6 @@ public class AutoClicker
 
 		// Reset button for click count
 		resetClickCountBtn = new JButton(resetClickString);
-		resetClickCountBtn.setBounds(208, 71, 90, 23);
 		resetClickCountBtn.addActionListener(new ActionListener()
 		{
 			@Override
@@ -265,22 +262,21 @@ public class AutoClicker
 
 		// Label to display current mouse location.
 		mouseCoords = new JLabel("");
-		mouseCoords.setBounds(250, 118, 82, 23);
-
-		//addAllComponentsToFrame();
 	}
 
 	private void addAllComponentsToFrame()
 	{
+		mainWindowPanel.add(clickSpeedLbl);
+		mainWindowPanel.add(clickSpeedTF);
 		mainWindowPanel.add(xcoordLbl);
 		mainWindowPanel.add(xcoordTF);
 		mainWindowPanel.add(ycoordLbl);
 		mainWindowPanel.add(ycoordTF);
 		mainWindowPanel.add(clickStatusLbl);
-		mainWindowPanel.add(startBtn);
-		mainWindowPanel.add(stopBtn);
-		mainWindowPanel.add(clickCountLbl);
 		mainWindowPanel.add(clickTestBtn);
+		mainWindowPanel.add(startBtn);
+		mainWindowPanel.add(clickCountLbl);
+		mainWindowPanel.add(stopBtn);
 		mainWindowPanel.add(resetClickCountBtn);
 		mainWindowPanel.add(mouseCoords);
 		
