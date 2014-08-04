@@ -77,6 +77,7 @@ public class AutoClicker
 	private String ycoordTFString = "y:";
 	private String stoppedString = "Stopped";
 	private String runningString = "Running";
+	private Color buttonColor;
 	private String startBtnString = "Start ";
 	private String startBtnHotkeyString = "(F6)";
 	private int startHotKey = KeyEvent.VK_F6;
@@ -98,11 +99,13 @@ public class AutoClicker
 	
 	private boolean getMouse = false; // control the updateMousePosition() thread
 	
+	
 	public AutoClicker()
 	{
 		super();
 		setFrameAttributes();
 		
+		buttonColor = new Color(225, 225, 225);
 		createGUIelements();
 		createAndAddMenuBar();
 		addAllComponentsToFrame();
@@ -205,6 +208,7 @@ public class AutoClicker
 
 		// create start button
 		startBtn = new JButton(startBtnString);
+		startBtn.setBackground(buttonColor);
 		startBtn.addActionListener(new ActionListener()
 		{
 			@Override
@@ -216,6 +220,7 @@ public class AutoClicker
 		
 		// create stop button
 		stopBtn = new JButton(stopBtnString);
+		stopBtn.setBackground(buttonColor);
 		stopBtn.addActionListener(new ActionListener()
 		{
 			@Override
@@ -240,6 +245,7 @@ public class AutoClicker
 
 		// Click test button
 		clickTestBtn = new JButton(clickTestBtnString);
+		clickTestBtn.setBackground(buttonColor);
 		clickTestBtn.addActionListener(new ActionListener()
 		{
 			@Override
@@ -252,6 +258,7 @@ public class AutoClicker
 
 		// Reset button for click count
 		resetClickCountBtn = new JButton(resetClickString);
+		resetClickCountBtn.setBackground(buttonColor);
 		resetClickCountBtn.addActionListener(new ActionListener()
 		{
 			@Override
