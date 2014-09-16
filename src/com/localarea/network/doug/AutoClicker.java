@@ -68,7 +68,7 @@ public class AutoClicker
 	private String getMouseCoordsHotkeyString = "(F8)";
 	private int getMouseCoordsHotKey = KeyEvent.VK_F8;
 	private int mouseUpdateDelay = 50;	// in milliseconds
-	private int clickDelay = 500;		// in milliseconds
+	private int clickDelay = 1000;		// in milliseconds
 	private int clickCount = 0;
 	private boolean running = false;	// control the autoclick() thread
 	private boolean validCoords = false;// x & y coords are greater than zero
