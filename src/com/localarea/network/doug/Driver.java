@@ -1,8 +1,8 @@
 /* File        : Main.java
  * Created     : March 4, 2013 [3/4/2013]
  * By          : Douglas Chidester
- * Description : Run an autoclicker.
- * Last Update : [5/29/13]
+ * Description : Runs the GUI for the autoclicker.
+ * Last Update : [12/27/14]
  * 
  * 	See AutoClicker.java for documentation.
  */
@@ -15,7 +15,7 @@ public class Driver
 	{
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-            	new AutoClicker();
+            	new MainFrame();
             }
         });
 	}
