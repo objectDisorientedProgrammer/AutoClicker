@@ -46,25 +46,21 @@ public class MainFrame extends JFrame
 	private int frameWidth = 240;
 	private int frameHeight = 270;
 	private String programName = "Auto Clicker";
-	private String version = " v0.99.5b";
+	private String version = " v0.99.7b";
 	private String author = "Douglas Chidester";
 
 	private JTextField xcoordTF, ycoordTF, clickSpeedTF;
 	private JLabel xcoordLbl, ycoordLbl, clickSpeedLbl, clickCountLbl, clickStatusLbl;
 	private JButton startBtn, stopBtn, clickTestBtn, resetClickCountBtn;
+	private JLabel mouseCoords;
 	private int xcoord = 0;
 	private int ycoord = 0;
-	private JLabel mouseCoords;
-	private int mouseX = 0;
-	private int mouseY = 0;
+	
 	private String getMouseCoordsHotkeyString = "(F8)";
 	private int getMouseCoordsHotKey = KeyEvent.VK_F8;
 	private int mouseUpdateDelay = 50;	// in milliseconds
 	private int clickDelay = 1000;		// in milliseconds
 	private int clickCount = 0;
-//	private boolean running = false;	// control the autoclick() thread
-//	private boolean validCoords = false;// x & y coords are greater than zero
-//	private String needXYmsg = "Please enter an x and y coordinate greater than 0.";
 	private String xcoordTFString = "x:";
 	private String ycoordTFString = "y:";
 	private String stoppedString = "Stopped";
@@ -96,7 +92,7 @@ public class MainFrame extends JFrame
 		setFrameAttributes();
 		initializePanel();
 		
-		buttonColor = new Color(225, 225, 225);
+		buttonColor = new Color(225, 225, 225);	// RGB
 		createGUIelements();
 		createAndAddMenuBar();
 		addAllComponentsToFrame();
@@ -111,8 +107,8 @@ public class MainFrame extends JFrame
 
 	private void initializePanel()
 	{
-		mainPanel = new JPanel((new GridLayout(0, 2, 5, 5))); // rows, cols, horiz gap, vert gap
-		mainPanel.setBackground(new Color(200, 200, 200));
+		mainPanel = new JPanel((new GridLayout(0, 2, 5, 5)));	// rows, cols, horiz gap, vert gap
+		mainPanel.setBackground(new Color(200, 200, 200));		// RGB
 	}
 
 	private void createAndAddMenuBar()
@@ -262,8 +258,7 @@ public class MainFrame extends JFrame
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				++clickCount;
-				clickCountLbl.setText("" + clickCount);
+				clickCountLbl.setText("" + ++clickCount);
 			}
 		});
 
@@ -379,10 +374,8 @@ public class MainFrame extends JFrame
 	            try
 				{
 					Point pi = MouseInfo.getPointerInfo().getLocation();
-					mouseX = pi.x;
-					mouseY = pi.y;
-					xcoordTF.setText(mouseX + "");
-					ycoordTF.setText(mouseY + "");
+					xcoordTF.setText(pi.x + "");
+					ycoordTF.setText(pi.y + "");
 				} catch(HeadlessException e1)
 				{
 					e1.printStackTrace();
