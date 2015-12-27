@@ -18,6 +18,7 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -137,8 +138,42 @@ public class MainFrame extends JFrame
 		helpMenu.setMnemonic(KeyEvent.VK_H);
 		menuBar.add(helpMenu);
 		
+		JMenuItem updateMenuItem = new JMenuItem("Updates"); // TODO add image
+		updateMenuItem.setMnemonic(KeyEvent.VK_U);
+		updateMenuItem.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				// create a window with a button to launch the github website
+				JButton update = new JButton("Update");
+				update.addActionListener(new ActionListener()
+				{
+					@Override
+					public void actionPerformed(ActionEvent e)
+					{
+						try
+						{
+							java.awt.Desktop.getDesktop().browse(
+									java.net.URI.create("https://github.com/objectDisorientedProgrammer/AutoClicker/releases"));
+						} catch(IOException e1)
+						{
+							JOptionPane.showMessageDialog(null, "Could not connect.", "Connection Error",
+									JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				});
+				JFrame f = new JFrame("Check for updates");
+				f.getContentPane().add(update);
+				f.setLocationRelativeTo(null);
+				f.setSize(200, 100);
+				f.setVisible(true);
+			}
+		});
+		helpMenu.add(updateMenuItem);
+		
 		JMenuItem helpMenuItem = new JMenuItem("Hints", new ImageIcon(this.getClass().getResource(imagePath+"help.png")));
-		helpMenuItem.setMnemonic(KeyEvent.VK_G);
+		helpMenuItem.setMnemonic(KeyEvent.VK_H);
 		helpMenuItem.addActionListener(new ActionListener()
 		{
 			@Override
