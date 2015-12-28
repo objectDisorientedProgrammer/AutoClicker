@@ -150,17 +150,17 @@ public class MainFrame extends JFrame
 		helpMenu.setMnemonic(KeyEvent.VK_H);
 		menuBar.add(helpMenu);
 		
-		JMenuItem updateMenuItem = new JMenuItem("Updates"); // TODO add image
+		JMenuItem updateMenuItem = new JMenuItem("Updates", new ImageIcon(this.getClass().getResource(imagePath+"update.png")));
 		updateMenuItem.setMnemonic(KeyEvent.VK_U);
 		updateMenuItem.addActionListener(new ActionListener()
 		{
-			private Dimension frameDimentions = new Dimension(200, 150);
+			private Dimension frameDimentions = new Dimension(240, 150);
 
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				// create a window with a button to launch the github website
-				JButton update = new JButton("Update");
+				JButton update = new JButton("Get Update");
 				update.addActionListener(new ActionListener()
 				{
 					@Override
