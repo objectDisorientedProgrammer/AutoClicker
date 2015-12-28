@@ -9,7 +9,9 @@
 
 package com.localarea.network.doug;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
@@ -18,6 +20,7 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -33,6 +36,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
@@ -46,7 +50,7 @@ public class MainFrame extends JFrame
 	private int frameWidth = 240;
 	private int frameHeight = 270;
 	private String programName = "Auto Clicker";
-	private String version = " v0.99.7b";
+	private String version = " v0.99.8-b";
 	private String author = "Douglas Chidester";
 
 	private JTextField xcoordTF, ycoordTF, clickSpeedTF;
@@ -104,6 +108,15 @@ public class MainFrame extends JFrame
 		
 		this.setVisible(true);
 	}
+	
+	/**
+	 * Get the version number string. Major.Minor.Subminor[-Beta]
+	 * @return version string a.b.c-M
+	 */
+	public String getVersionNumber()
+	{
+		return this.version;
+	}
 
 	private void initializePanel()
 	{
@@ -137,8 +150,57 @@ public class MainFrame extends JFrame
 		helpMenu.setMnemonic(KeyEvent.VK_H);
 		menuBar.add(helpMenu);
 		
+		JMenuItem updateMenuItem = new JMenuItem("Updates"); // TODO add image
+		updateMenuItem.setMnemonic(KeyEvent.VK_U);
+		updateMenuItem.addActionListener(new ActionListener()
+		{
+			private Dimension frameDimentions = new Dimension(200, 150);
+
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				// create a window with a button to launch the github website
+				JButton update = new JButton("Update");
+				update.addActionListener(new ActionListener()
+				{
+					@Override
+					public void actionPerformed(ActionEvent e)
+					{
+						try
+						{
+							java.awt.Desktop.getDesktop().browse(
+									java.net.URI.create("https://github.com/objectDisorientedProgrammer/AutoClicker/releases"));
+						} catch(IOException e1)
+						{
+							JOptionPane.showMessageDialog(null, "Could not connect.", "Connection Error",
+									JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				});
+				// show version number and upgrade instructions
+				JTextArea updateInfo = new JTextArea(
+						"Download the latest jar file from the releases page if you have an older version.\n\nCurrent Version: " + version);
+				updateInfo.setEditable(false);
+				updateInfo.setLineWrap(true);
+				updateInfo.setWrapStyleWord(true);
+				updateInfo.setMinimumSize(frameDimentions);
+				
+				JFrame f = new JFrame("Check for updates");
+				f.setLocationRelativeTo(null);
+				f.setSize(frameDimentions);
+				f.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+				f.setLayout(new BorderLayout(10, 10));
+				
+				f.getContentPane().add(updateInfo, BorderLayout.PAGE_START);
+				f.getContentPane().add(update, BorderLayout.PAGE_END);
+				
+				f.setVisible(true);
+			}
+		});
+		helpMenu.add(updateMenuItem);
+		
 		JMenuItem helpMenuItem = new JMenuItem("Hints", new ImageIcon(this.getClass().getResource(imagePath+"help.png")));
-		helpMenuItem.setMnemonic(KeyEvent.VK_G);
+		helpMenuItem.setMnemonic(KeyEvent.VK_H);
 		helpMenuItem.addActionListener(new ActionListener()
 		{
 			@Override
