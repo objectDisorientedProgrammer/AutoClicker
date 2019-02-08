@@ -1,21 +1,22 @@
-# AutoClicker
+# Auto Clicker
 This stand-alone program will click automatically given coordinates and a click delay time.
 
-author Doug Chidester
+Author: Doug Chidester
 
 ## Building
+Build using Eclipse IDE.
+
 To build from the command line use:
 
-	mkdir bin/
-	javac src/com/localarea/network/doug/*.java -d bin/
+    mkdir bin/
+    javac src/com/localarea/network/doug/*.java -d bin/
 
 To create an executable jar file use:
 
-	cd src
-	jar cmvf ../META-INF/MANIFEST.MF AutoClicker.jar ../bin/com/localarea/network/doug/*.class -C ../res/
+    cd src
+    jar cmvf ../META-INF/MANIFEST.MF AutoClicker.jar ../bin/com/localarea/network/doug/*.class -C ../res/
 
 Run with:
 
-	java -jar AutoClicker.jar
-
+    java -jar AutoClicker.jar
 
