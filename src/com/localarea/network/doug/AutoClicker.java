@@ -4,7 +4,7 @@
  * Description : Click many times in one spot.
  * Version	   : v0.99.5b [7/29/2014]
  * Last Update : v0.99.7b [12/24/2015]
- * 
+ *
  * Updates:
  * [3/4/13] - added actionlisteners to start/stop button, split program into 2 classes, made the program click at (x,y),
  * 			  display mouse location in a label, align GUI.
@@ -29,7 +29,7 @@ public class AutoClicker
 	private String needXYmsg = "Please enter an x and y coordinate greater than 0.";
 	private Robot robot;
 	private Thread clickThread;
-	
+
 	public AutoClicker()
 	{
 		super();
@@ -50,13 +50,16 @@ public class AutoClicker
 				try
 				{
 					robot = new Robot();
-					// move the mouse and click
+					// move the mouse
 					robot.mouseMove(xcoord, ycoord);
 					while(running)
 					{
+						robot.delay(clickDelay); // wait for some milliseconds
+
+						// perform click operation
 						robot.mousePress(InputEvent.BUTTON1_MASK);
 						robot.mouseRelease(InputEvent.BUTTON1_MASK);
-						robot.delay(clickDelay); // in ms
+
 					}
 				} catch(Exception e2)
 				{
