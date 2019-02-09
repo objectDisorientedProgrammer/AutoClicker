@@ -70,12 +70,11 @@ public class AutoClicker
                     robot.mouseMove(xcoord, ycoord);
                     while(running)
                     {
-                        robot.delay(clickDelay); // wait for some milliseconds
+                        robot.delay(clickDelay); // wait for N milliseconds
 
                         // perform click operation
-                        robot.mousePress(InputEvent.BUTTON1_MASK);
-                        robot.mouseRelease(InputEvent.BUTTON1_MASK);
-
+                        robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+                        robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
                     }
                 } catch(Exception e2)
                 {
