@@ -5,18 +5,18 @@
  *
  * See AutoClicker.java for documentation.
  *
- * 
+ *
  * MIT License
- * 
+ *
  * Copyright (c) 2011 Douglas Chidester
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  */
@@ -64,7 +64,7 @@ public class MainFrame extends JFrame
     private int frameWidth = 240;
     private int frameHeight = 270;
     private String programName = "Auto Clicker";
-    private String version = " v0.99.8-b";
+    private String version = " 0.99.9";
     private String author = "Douglas Chidester";
 
     private JTextField xcoordTF, ycoordTF, clickSpeedTF;
