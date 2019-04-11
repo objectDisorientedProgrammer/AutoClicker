@@ -37,7 +37,6 @@ import java.awt.event.InputEvent;
 
 import javax.swing.JOptionPane;
 
-@SuppressWarnings("serial")
 public class AutoClicker
 {
     private boolean running = false;     // control the autoclick() thread

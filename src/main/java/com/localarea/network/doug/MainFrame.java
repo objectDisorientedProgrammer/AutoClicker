@@ -64,7 +64,7 @@ public class MainFrame extends JFrame
     private int frameWidth = 240;
     private int frameHeight = 270;
     private String programName = "Auto Clicker";
-    private String version = " 0.99.9";
+    private String version = "0.99.9";
     private String author = "Douglas Chidester";
 
     private JTextField xcoordTF, ycoordTF, clickSpeedTF;
@@ -124,8 +124,8 @@ public class MainFrame extends JFrame
     }
 
     /**
-     * Get the version number string. Major.Minor.Subminor[-Beta]
-     * @return version string a.b.c-M
+     * Get the version number string. Major.Minor.Subminor
+     * @return version string x.y.z
      */
     public String getVersionNumber()
     {
@@ -254,6 +254,7 @@ public class MainFrame extends JFrame
     {
         // create xcoord button
         xcoordTF = new JTextField(4);
+        xcoordTF.setToolTipText("Shortcut key: " + getMouseCoordsHotkeyString);
         xcoordTF.setText("" + xcoord);
 
         // create xcoord label
@@ -262,6 +263,7 @@ public class MainFrame extends JFrame
 
         // create ycoord button
         ycoordTF = new JTextField(4);
+        ycoordTF.setToolTipText("Shortcut key: " + getMouseCoordsHotkeyString);
         ycoordTF.setText("" + ycoord);
 
         // create ycoord label
@@ -277,6 +279,7 @@ public class MainFrame extends JFrame
         // create start button
         startBtn = new JButton(startBtnString);
         startBtn.setBackground(buttonColor);
+        startBtn.setToolTipText("Shortcut key: "+startBtnHotkeyString);
         startBtn.addActionListener(new ActionListener()
         {
             @Override
@@ -297,6 +300,7 @@ public class MainFrame extends JFrame
         // create stop button
         stopBtn = new JButton(stopBtnString);
         stopBtn.setBackground(buttonColor);
+        stopBtn.setToolTipText("Shortcut key: "+stopBtnHotkeyString);
         stopBtn.addActionListener(new ActionListener()
         {
             @Override
@@ -315,15 +319,16 @@ public class MainFrame extends JFrame
 
         // Label for delay TF
         clickSpeedLbl = new JLabel(clickSpeedString);
+        clickSpeedLbl.setToolTipText("milliseconds");
         clickSpeedLbl.setHorizontalAlignment(JLabel.RIGHT);
 
         // Textfield for time delay
         clickSpeedTF = new JTextField(4);
         clickSpeedTF.setText("" + clickDelay);
-        // clickSpeedTF.addActionListener(clearTextFieldOnFocus);
+        clickSpeedTF.setToolTipText("milliseconds");
 
         // Click counter label
-        clickCountLbl = new JLabel("" + clickCount);
+        clickCountLbl = new JLabel(Integer.toString(clickCount));
         clickCountLbl.setHorizontalAlignment(SwingConstants.RIGHT);
 
         // Click test button
@@ -334,7 +339,8 @@ public class MainFrame extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                clickCountLbl.setText("" + ++clickCount);
+            	++clickCount;
+                clickCountLbl.setText(Integer.toString(clickCount));
             }
         });
 
@@ -347,7 +353,7 @@ public class MainFrame extends JFrame
             public void actionPerformed(ActionEvent e)
             {
                 clickCount = 0;
-                clickCountLbl.setText("" + clickCount);
+                clickCountLbl.setText(Integer.toString(clickCount));
             }
         });
 
@@ -392,8 +398,8 @@ public class MainFrame extends JFrame
                     {
                         mouseXY = MouseInfo.getPointerInfo().getLocation();
                         Thread.sleep(mouseUpdateDelay);
-                        mouseCoords.setText((int) mouseXY.getX() + ", "
-                                + (int) mouseXY.getY());
+                        mouseCoords.setText(Integer.toString((int) mouseXY.getX()) + ", "
+                                + Integer.toString((int) mouseXY.getY()));
                     } catch(InterruptedException e)
                     {
                         mouseCoords.setText(e.getMessage());
