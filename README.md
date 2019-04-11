@@ -11,8 +11,14 @@ From the project root directory:
 
     gradle jar
 
+The generated jar file will be in /build/libs/AutoClicker-x.y.z.jar by default.
+
 ## Running
 Either double click the jar file or open a terminal and use:
 
     java -jar AutoClicker.jar
+
+Note: you may need to make the .jar executable on some systems:
+
+    chmod u+x AutoClicker.jar
 
