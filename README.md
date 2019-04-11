@@ -3,20 +3,16 @@ This stand-alone program will click automatically given coordinates and a click 
 
 Author: Doug Chidester
 
+## Dependencies
+This project uses Gradle 3.4.1 (or newer?) as a build system.
+
 ## Building
-Build using Eclipse IDE.
+From the project root directory:
 
-To build from the command line use:
+    gradle jar
 
-    mkdir bin/
-    javac src/com/localarea/network/doug/*.java -d bin/
-
-To create an executable jar file use:
-
-    cd src
-    jar cmvf ../META-INF/MANIFEST.MF AutoClicker.jar ../bin/com/localarea/network/doug/*.class -C ../res/
-
-Run with:
+## Running
+Either double click the jar file or open a terminal and use:
 
     java -jar AutoClicker.jar
 
