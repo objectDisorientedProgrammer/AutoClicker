@@ -95,8 +95,8 @@ public class AutoClicker
     {
         if(xcoord > 0 && ycoord > 0) // check for valid coordinates
         {
-            validCoords = true;
-            if(validCoords)
+            //validCoords = true;
+            if(!running)
             {
                 running = true;
                 autoclick(xcoord, ycoord, clickDelay);

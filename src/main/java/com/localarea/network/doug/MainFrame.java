@@ -34,9 +34,11 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyAdapter;
 import java.io.IOException;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.ComponentInputMap;
 import javax.swing.ImageIcon;
@@ -119,6 +121,7 @@ public class MainFrame extends JFrame
         updateMousePosition();
         // Enable hotkeys
         setupHotkeys();
+        //addKeyListener(new HotkeyListener());
 
         this.setVisible(true);
     }
@@ -280,22 +283,7 @@ public class MainFrame extends JFrame
         startBtn = new JButton(startBtnString);
         startBtn.setBackground(buttonColor);
         startBtn.setToolTipText("Shortcut key: "+startBtnHotkeyString);
-        startBtn.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-
-                if(clicker.startClicking(Integer.parseInt(xcoordTF.getText()),
-                                        Integer.parseInt(ycoordTF.getText()),
-                                        Integer.parseInt(clickSpeedTF.getText())))
-                {
-                    // update status
-                    clickStatusLbl.setForeground(new Color(0, 200, 100));
-                    clickStatusLbl.setText(runningString);
-                }
-            }
-        });
+        startBtn.addActionListener(new StartHandler());
 
         // create stop button
         stopBtn = new JButton(stopBtnString);
@@ -427,7 +415,15 @@ public class MainFrame extends JFrame
                     // update status
                     clickStatusLbl.setForeground(new Color(0, 200, 100));
                     clickStatusLbl.setText(runningString);
+                    
+                    // disable start button
+                    startBtn.setEnabled(false);
+                    // enable stop button
+                    stopBtn.setEnabled(true);
                 }
+                else
+                	JOptionPane.showMessageDialog(null, "The autoclicker is already running.", "Already Running",
+                            JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -467,5 +463,108 @@ public class MainFrame extends JFrame
 
         SwingUtilities.replaceUIActionMap((JComponent) mainPanel, actionMap);
         SwingUtilities.replaceUIInputMap((JComponent) mainPanel, JComponent.WHEN_IN_FOCUSED_WINDOW, keyMap);
+    }
+    
+    // not working as a replacement to the keymap......
+//    public class HotkeyListener extends KeyAdapter
+//    {
+//    	@Override
+//        public void keyPressed(KeyEvent ke)
+//        {
+//    		int key = ke.getKeyCode();
+//    		
+//    		switch(key)
+//    		{
+//    		case KeyEvent.VK_F6:
+//    			JOptionPane.showMessageDialog(null, "Pressed F6.", "Got Input",
+//                        JOptionPane.ERROR_MESSAGE);
+//    			break;
+//    		}
+//        }
+//    }
+    
+    /**
+     * 
+     * @author doug
+     *
+     */
+    public class StartHandler implements ActionListener
+    {
+		@Override
+		public void actionPerformed(ActionEvent ae) {
+			boolean hasStarted = clicker.startClicking(Integer.parseInt(xcoordTF.getText()),
+                    Integer.parseInt(ycoordTF.getText()),
+                    Integer.parseInt(clickSpeedTF.getText()));
+			
+			if(hasStarted)
+            {
+                // update status
+                clickStatusLbl.setForeground(new Color(0, 200, 100));
+                clickStatusLbl.setText(runningString);
+                
+                // disable start button
+                startBtn.setEnabled(false);
+                // enable stop button
+                stopBtn.setEnabled(true);
+            }
+            else
+            	JOptionPane.showMessageDialog(null, "The autoclicker is already running.", "Already Running",
+                        JOptionPane.ERROR_MESSAGE);
+		}
+		
+		/* startBtn
+		 @Override
+            public void actionPerformed(ActionEvent e)
+            {
+
+                if(clicker.startClicking(Integer.parseInt(xcoordTF.getText()),
+                                        Integer.parseInt(ycoordTF.getText()),
+                                        Integer.parseInt(clickSpeedTF.getText())))
+                {
+                    // update status
+                    clickStatusLbl.setForeground(new Color(0, 200, 100));
+                    clickStatusLbl.setText(runningString);
+                }
+            }
+		 */
+		
+		/* start_action
+		 @Override
+            public void actionPerformed(ActionEvent e) {
+                if(clicker.startClicking(Integer.parseInt(xcoordTF.getText()),
+                        Integer.parseInt(ycoordTF.getText()),
+                        Integer.parseInt(clickSpeedTF.getText())))
+                {
+                    // update status
+                    clickStatusLbl.setForeground(new Color(0, 200, 100));
+                    clickStatusLbl.setText(runningString);
+                    
+                    // disable start button
+                    startBtn.setEnabled(false);
+                    // enable stop button
+                    stopBtn.setEnabled(true);
+                }
+                else
+                	JOptionPane.showMessageDialog(null, "The autoclicker is already running.", "Already Running",
+                            JOptionPane.ERROR_MESSAGE);
+            }
+		 */
+    	
+    }
+    
+    /**
+     * 
+     * @author doug
+     *
+     */
+    public class StopHandler implements ActionListener
+    {
+
+		@Override
+		public void actionPerformed(ActionEvent ae) {
+			// TODO Auto-generated method stub
+			
+		}
+    	
     }
 }
