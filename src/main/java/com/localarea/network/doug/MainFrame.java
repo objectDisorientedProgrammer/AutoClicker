@@ -283,7 +283,13 @@ public class MainFrame extends JFrame
         startBtn = new JButton(startBtnString);
         startBtn.setBackground(buttonColor);
         startBtn.setToolTipText("Shortcut key: "+startBtnHotkeyString);
-        startBtn.addActionListener(new StartHandler());
+        startBtn.addActionListener(new ActionListener()
+        {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				startClickLogic();
+			}
+		});
 
         // create stop button
         stopBtn = new JButton(stopBtnString);
@@ -292,16 +298,8 @@ public class MainFrame extends JFrame
         stopBtn.addActionListener(new ActionListener()
         {
             @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                clicker.stopClicking();
-                // dont keep changing the text if its already stopped
-                if(!clickStatusLbl.getText().equals(stoppedString))
-                {
-                    // update status
-                    clickStatusLbl.setForeground(Color.red);
-                    clickStatusLbl.setText(stoppedString);
-                }
+            public void actionPerformed(ActionEvent e) {
+            	stopClickLogic();
             }
         });
 
@@ -397,6 +395,54 @@ public class MainFrame extends JFrame
         });
         updateMouseCoords.start();
     }
+    
+    /**
+     * Function to ensure common behavior between button and hotkey.
+     * Could be done as a "Handler" class to be more object oriented...
+     */
+    private void startClickLogic()
+    {
+    	// if not clicking, attempt to start
+    	if(!clicker.isClicking() && clicker.startClicking(Integer.parseInt(xcoordTF.getText()),
+                Integer.parseInt(ycoordTF.getText()),
+                Integer.parseInt(clickSpeedTF.getText())))
+        {
+        	// update status
+            clickStatusLbl.setForeground(new Color(0, 200, 100));
+            clickStatusLbl.setText(runningString);
+            
+            // disable start button
+            startBtn.setEnabled(false);
+            // enable stop button
+            stopBtn.setEnabled(true);
+        }
+        else
+        	JOptionPane.showMessageDialog(null, "The autoclicker is already running.", "Already Running",
+                    JOptionPane.ERROR_MESSAGE);
+    }
+    
+    /**
+     * Function to ensure common behavior between button and hotkey.
+     * Could be done as a "Handler" class to be more object oriented...
+     */
+    private void stopClickLogic()
+    {
+    	// if clicking
+        if(clicker.isClicking())
+        {
+        	// stop clicking
+        	clicker.stopClicking();
+            
+        	// update status
+            clickStatusLbl.setForeground(Color.red);
+            clickStatusLbl.setText(stoppedString);
+            
+            // enable start button
+            startBtn.setEnabled(true);
+            // disable stop button
+            stopBtn.setEnabled(false);
+        }
+    }
 
     private void setupHotkeys()
     {
@@ -408,38 +454,16 @@ public class MainFrame extends JFrame
         actionMap.put("action_start", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(clicker.startClicking(Integer.parseInt(xcoordTF.getText()),
-                        Integer.parseInt(ycoordTF.getText()),
-                        Integer.parseInt(clickSpeedTF.getText())))
-                {
-                    // update status
-                    clickStatusLbl.setForeground(new Color(0, 200, 100));
-                    clickStatusLbl.setText(runningString);
-                    
-                    // disable start button
-                    startBtn.setEnabled(false);
-                    // enable stop button
-                    stopBtn.setEnabled(true);
-                }
-                else
-                	JOptionPane.showMessageDialog(null, "The autoclicker is already running.", "Already Running",
-                            JOptionPane.ERROR_MESSAGE);
+                startClickLogic();
             }
         });
-
+        
         // Stop clicking when hotkey is pressed
         keyMap.put(KeyStroke.getKeyStroke(stopHotKey , 0), "action_stop");
         actionMap.put("action_stop", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                clicker.stopClicking();
-                // dont keep changing the text if its already stopped
-                if(!clickStatusLbl.getText().equals(stoppedString))
-                {
-                    // update status
-                    clickStatusLbl.setForeground(Color.red);
-                    clickStatusLbl.setText(stoppedString);
-                }
+            	stopClickLogic();
             }
         });
 
@@ -465,106 +489,4 @@ public class MainFrame extends JFrame
         SwingUtilities.replaceUIInputMap((JComponent) mainPanel, JComponent.WHEN_IN_FOCUSED_WINDOW, keyMap);
     }
     
-    // not working as a replacement to the keymap......
-//    public class HotkeyListener extends KeyAdapter
-//    {
-//    	@Override
-//        public void keyPressed(KeyEvent ke)
-//        {
-//    		int key = ke.getKeyCode();
-//    		
-//    		switch(key)
-//    		{
-//    		case KeyEvent.VK_F6:
-//    			JOptionPane.showMessageDialog(null, "Pressed F6.", "Got Input",
-//                        JOptionPane.ERROR_MESSAGE);
-//    			break;
-//    		}
-//        }
-//    }
-    
-    /**
-     * 
-     * @author doug
-     *
-     */
-    public class StartHandler implements ActionListener
-    {
-		@Override
-		public void actionPerformed(ActionEvent ae) {
-			boolean hasStarted = clicker.startClicking(Integer.parseInt(xcoordTF.getText()),
-                    Integer.parseInt(ycoordTF.getText()),
-                    Integer.parseInt(clickSpeedTF.getText()));
-			
-			if(hasStarted)
-            {
-                // update status
-                clickStatusLbl.setForeground(new Color(0, 200, 100));
-                clickStatusLbl.setText(runningString);
-                
-                // disable start button
-                startBtn.setEnabled(false);
-                // enable stop button
-                stopBtn.setEnabled(true);
-            }
-            else
-            	JOptionPane.showMessageDialog(null, "The autoclicker is already running.", "Already Running",
-                        JOptionPane.ERROR_MESSAGE);
-		}
-		
-		/* startBtn
-		 @Override
-            public void actionPerformed(ActionEvent e)
-            {
-
-                if(clicker.startClicking(Integer.parseInt(xcoordTF.getText()),
-                                        Integer.parseInt(ycoordTF.getText()),
-                                        Integer.parseInt(clickSpeedTF.getText())))
-                {
-                    // update status
-                    clickStatusLbl.setForeground(new Color(0, 200, 100));
-                    clickStatusLbl.setText(runningString);
-                }
-            }
-		 */
-		
-		/* start_action
-		 @Override
-            public void actionPerformed(ActionEvent e) {
-                if(clicker.startClicking(Integer.parseInt(xcoordTF.getText()),
-                        Integer.parseInt(ycoordTF.getText()),
-                        Integer.parseInt(clickSpeedTF.getText())))
-                {
-                    // update status
-                    clickStatusLbl.setForeground(new Color(0, 200, 100));
-                    clickStatusLbl.setText(runningString);
-                    
-                    // disable start button
-                    startBtn.setEnabled(false);
-                    // enable stop button
-                    stopBtn.setEnabled(true);
-                }
-                else
-                	JOptionPane.showMessageDialog(null, "The autoclicker is already running.", "Already Running",
-                            JOptionPane.ERROR_MESSAGE);
-            }
-		 */
-    	
-    }
-    
-    /**
-     * 
-     * @author doug
-     *
-     */
-    public class StopHandler implements ActionListener
-    {
-
-		@Override
-		public void actionPerformed(ActionEvent ae) {
-			// TODO Auto-generated method stub
-			
-		}
-    	
-    }
 }
