@@ -3,7 +3,7 @@ name: Bug report
 about: Create a report to help us improve
 title: ''
 labels: bug
-assignees: ''
+assignees: 'objectDisorientedProgrammer'
 
 ---
 
@@ -24,8 +24,8 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
- - OS: [e.g.Linux Mint 18, Windows 8]
- - Version [e.g. 0.87.4]
+ - OS: [e.g.Linux Mint 18, Windows 8, OSX]
+ - AutoClicker Version: [e.g. 0.87.4]
 
 **Additional context**
 Add any other context about the problem here.
