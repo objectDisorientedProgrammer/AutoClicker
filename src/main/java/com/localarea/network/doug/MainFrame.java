@@ -75,6 +75,9 @@ public class MainFrame extends JFrame
     private JLabel mouseCoords;
     private int xcoord = 0;
     private int ycoord = 0;
+    private static final int MIN_X_COORD = 0;
+    private static final int MIN_Y_COORD = 0;
+    private String invalidCoordsMsg = "Please enter an x and y coordinate greater than (" + MIN_X_COORD + ", " + MIN_Y_COORD + ").";
 
     private String getMouseCoordsHotkeyString = "(F8)";
     private int getMouseCoordsHotKey = KeyEvent.VK_F8;
@@ -402,19 +405,35 @@ public class MainFrame extends JFrame
      */
     private void startClickLogic()
     {
-    	// if not clicking, attempt to start
-    	if(!clicker.isClicking() && clicker.startClicking(Integer.parseInt(xcoordTF.getText()),
-                Integer.parseInt(ycoordTF.getText()),
-                Integer.parseInt(clickSpeedTF.getText())))
+    	int x = Integer.parseInt(xcoordTF.getText());
+    	int y = Integer.parseInt(ycoordTF.getText());
+    	boolean clickStatus = false;
+    	
+    	// if not clicking
+    	if(!clicker.isClicking())
         {
-        	// update status
-            clickStatusLbl.setForeground(new Color(0, 200, 100));
-            clickStatusLbl.setText(runningString);
-            
-            // disable start button
-            startBtn.setEnabled(false);
-            // enable stop button
-            stopBtn.setEnabled(true);
+    		// if valid coords
+    		if(x > MIN_X_COORD && y > MIN_Y_COORD)
+    		{
+    			clickStatus = clicker.startClicking(x, y, Integer.parseInt(clickSpeedTF.getText()));
+    		}
+    		else
+    		{
+    			JOptionPane.showMessageDialog(null, invalidCoordsMsg, "Coordinate Error",
+                        JOptionPane.ERROR_MESSAGE);
+    		}
+    		
+    		if(clickStatus)
+    		{
+    			// update status
+                clickStatusLbl.setForeground(new Color(0, 200, 100));
+                clickStatusLbl.setText(runningString);
+                
+                // disable start button
+                startBtn.setEnabled(false);
+                // enable stop button
+                stopBtn.setEnabled(true);
+    		}
         }
         else
         	JOptionPane.showMessageDialog(null, "The autoclicker is already running.", "Already Running",

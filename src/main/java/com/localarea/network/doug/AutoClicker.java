@@ -40,11 +40,9 @@ import javax.swing.JOptionPane;
 public class AutoClicker
 {
     private boolean running = false; // control the autoclick() thread
-    private String needXYmsg = "Please enter an x and y coordinate greater than 0.";
+    
     private Robot robot;
     private Thread clickThread;
-    private static final int MIN_X_COORD = 0;
-    private static final int MIN_Y_COORD = 0;
 
     public AutoClicker()
     {
@@ -96,15 +94,12 @@ public class AutoClicker
     {
     	boolean status = false;
     	
-        if(xcoord > MIN_X_COORD && ycoord > MIN_Y_COORD && !running) // check for valid coordinates
+        if(!running && xcoord >= 0 && ycoord >= 0) // coordinates cannot be negative
         {
             running = true;
             autoclick(xcoord, ycoord, clickDelay);
             status = true;
         }
-        else
-            JOptionPane.showMessageDialog(null, needXYmsg, "Coordinate Error",
-                    JOptionPane.ERROR_MESSAGE);
         
         return status;
     }
