@@ -11,7 +11,7 @@
  * [5/29/13] - implemented hotkeys for start (F6) and stop (F7).
  * [10/11/13] - get and save mouse location with hotkey F8
  * To Do:
- *   - see github issues
+ *   - see github issues: https://github.com/objectDisorientedProgrammer/AutoClicker/issues
  * 
  * 
  * 
@@ -35,12 +35,9 @@ package com.localarea.network.doug;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
 
-import javax.swing.JOptionPane;
-
 public class AutoClicker
 {
     private boolean running = false; // control the autoclick() thread
-    
     private Robot robot;
     private Thread clickThread;
 
@@ -66,9 +63,11 @@ public class AutoClicker
                     robot = new Robot();
                     // move the mouse
                     robot.mouseMove(xcoord, ycoord);
+                    
                     while(running)
                     {
-                        robot.delay(clickDelay); // wait for N milliseconds
+                    	// pause robot for N milliseconds
+                        robot.delay(clickDelay);
 
                         // perform click operation
                         robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
@@ -94,7 +93,7 @@ public class AutoClicker
     {
     	boolean status = false;
     	
-        if(!running && xcoord >= 0 && ycoord >= 0) // coordinates cannot be negative
+        if(!running && xcoord >= 0 && ycoord >= 0) // coordinates must not be negative
         {
             running = true;
             autoclick(xcoord, ycoord, clickDelay);
