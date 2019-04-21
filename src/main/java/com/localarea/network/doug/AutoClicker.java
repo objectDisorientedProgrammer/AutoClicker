@@ -11,7 +11,7 @@
  * [5/29/13] - implemented hotkeys for start (F6) and stop (F7).
  * [10/11/13] - get and save mouse location with hotkey F8
  * To Do:
- *   - see github issues
+ *   - see github issues: https://github.com/objectDisorientedProgrammer/AutoClicker/issues
  * 
  * 
  * 
@@ -35,13 +35,9 @@ package com.localarea.network.doug;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
 
-import javax.swing.JOptionPane;
-
 public class AutoClicker
 {
-    private boolean running = false;     // control the autoclick() thread
-    private boolean validCoords = false; // x & y coords are greater than zero
-    private String needXYmsg = "Please enter an x and y coordinate greater than 0.";
+    private boolean running = false; // control the autoclick() thread
     private Robot robot;
     private Thread clickThread;
 
@@ -67,9 +63,11 @@ public class AutoClicker
                     robot = new Robot();
                     // move the mouse
                     robot.mouseMove(xcoord, ycoord);
+                    
                     while(running)
                     {
-                        robot.delay(clickDelay); // wait for N milliseconds
+                    	// pause robot for N milliseconds
+                        robot.delay(clickDelay);
 
                         // perform click operation
                         robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
@@ -93,20 +91,16 @@ public class AutoClicker
      */
     public boolean startClicking(int xcoord, int ycoord, int clickDelay)
     {
-        if(xcoord > 0 && ycoord > 0) // check for valid coordinates
+    	boolean status = false;
+    	
+        if(!running && xcoord >= 0 && ycoord >= 0) // coordinates must not be negative
         {
-            validCoords = true;
-            if(validCoords)
-            {
-                running = true;
-                autoclick(xcoord, ycoord, clickDelay);
-                return true;
-            }
+            running = true;
+            autoclick(xcoord, ycoord, clickDelay);
+            status = true;
         }
-        else
-            JOptionPane.showMessageDialog(null, needXYmsg, "Coordinate Error",
-                    JOptionPane.ERROR_MESSAGE);
-        return false;
+        
+        return status;
     }
 
     /**
@@ -114,7 +108,15 @@ public class AutoClicker
      */
     public void stopClicking()
     {
-        validCoords = false;
         running = false;
+    }
+    
+    /**
+     * Query the autoclicker to determine if it is clicking.
+     * @return true if clicking, otherwise false.
+     */
+    public boolean isClicking()
+    {
+    	return running;
     }
 }

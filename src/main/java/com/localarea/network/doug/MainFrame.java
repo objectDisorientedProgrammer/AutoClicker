@@ -73,6 +73,9 @@ public class MainFrame extends JFrame
     private JLabel mouseCoords;
     private int xcoord = 0;
     private int ycoord = 0;
+    private static final int MIN_X_COORD = 0;
+    private static final int MIN_Y_COORD = 0;
+    private String invalidCoordsMsg = "Please enter an x and y coordinate greater than (" + MIN_X_COORD + ", " + MIN_Y_COORD + ").";
 
     private String getMouseCoordsHotkeyString = "(F8)";
     private int getMouseCoordsHotKey = KeyEvent.VK_F8;
@@ -119,6 +122,7 @@ public class MainFrame extends JFrame
         updateMousePosition();
         // Enable hotkeys
         setupHotkeys();
+        //addKeyListener(new HotkeyListener());
 
         this.setVisible(true);
     }
@@ -282,20 +286,11 @@ public class MainFrame extends JFrame
         startBtn.setToolTipText("Shortcut key: "+startBtnHotkeyString);
         startBtn.addActionListener(new ActionListener()
         {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-
-                if(clicker.startClicking(Integer.parseInt(xcoordTF.getText()),
-                                        Integer.parseInt(ycoordTF.getText()),
-                                        Integer.parseInt(clickSpeedTF.getText())))
-                {
-                    // update status
-                    clickStatusLbl.setForeground(new Color(0, 200, 100));
-                    clickStatusLbl.setText(runningString);
-                }
-            }
-        });
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				startClickLogic();
+			}
+		});
 
         // create stop button
         stopBtn = new JButton(stopBtnString);
@@ -304,16 +299,8 @@ public class MainFrame extends JFrame
         stopBtn.addActionListener(new ActionListener()
         {
             @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                clicker.stopClicking();
-                // dont keep changing the text if its already stopped
-                if(!clickStatusLbl.getText().equals(stoppedString))
-                {
-                    // update status
-                    clickStatusLbl.setForeground(Color.red);
-                    clickStatusLbl.setText(stoppedString);
-                }
+            public void actionPerformed(ActionEvent e) {
+            	stopClickLogic();
             }
         });
 
@@ -409,6 +396,70 @@ public class MainFrame extends JFrame
         });
         updateMouseCoords.start();
     }
+    
+    /**
+     * Function to ensure common behavior between button and hotkey.
+     * Could be done as a "Handler" class to be more object oriented...
+     */
+    private void startClickLogic()
+    {
+    	int x = Integer.parseInt(xcoordTF.getText());
+    	int y = Integer.parseInt(ycoordTF.getText());
+    	boolean clickStatus = false;
+    	
+    	// if not clicking
+    	if(!clicker.isClicking())
+        {
+    		// if valid coords
+    		if(x > MIN_X_COORD && y > MIN_Y_COORD)
+    		{
+    			clickStatus = clicker.startClicking(x, y, Integer.parseInt(clickSpeedTF.getText()));
+    		}
+    		else
+    		{
+    			JOptionPane.showMessageDialog(null, invalidCoordsMsg, "Coordinate Error",
+                        JOptionPane.ERROR_MESSAGE);
+    		}
+    		
+    		if(clickStatus)
+    		{
+    			// update status
+                clickStatusLbl.setForeground(new Color(0, 200, 100));
+                clickStatusLbl.setText(runningString);
+                
+                // disable start button
+                startBtn.setEnabled(false);
+                // enable stop button
+                stopBtn.setEnabled(true);
+    		}
+        }
+        else
+        	JOptionPane.showMessageDialog(null, "The autoclicker is already running.", "Already Running",
+                    JOptionPane.ERROR_MESSAGE);
+    }
+    
+    /**
+     * Function to ensure common behavior between button and hotkey.
+     * Could be done as a "Handler" class to be more object oriented...
+     */
+    private void stopClickLogic()
+    {
+    	// if clicking
+        if(clicker.isClicking())
+        {
+        	// stop clicking
+        	clicker.stopClicking();
+            
+        	// update status
+            clickStatusLbl.setForeground(Color.red);
+            clickStatusLbl.setText(stoppedString);
+            
+            // enable start button
+            startBtn.setEnabled(true);
+            // disable stop button
+            stopBtn.setEnabled(false);
+        }
+    }
 
     private void setupHotkeys()
     {
@@ -420,30 +471,16 @@ public class MainFrame extends JFrame
         actionMap.put("action_start", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(clicker.startClicking(Integer.parseInt(xcoordTF.getText()),
-                        Integer.parseInt(ycoordTF.getText()),
-                        Integer.parseInt(clickSpeedTF.getText())))
-                {
-                    // update status
-                    clickStatusLbl.setForeground(new Color(0, 200, 100));
-                    clickStatusLbl.setText(runningString);
-                }
+                startClickLogic();
             }
         });
-
+        
         // Stop clicking when hotkey is pressed
         keyMap.put(KeyStroke.getKeyStroke(stopHotKey , 0), "action_stop");
         actionMap.put("action_stop", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                clicker.stopClicking();
-                // dont keep changing the text if its already stopped
-                if(!clickStatusLbl.getText().equals(stoppedString))
-                {
-                    // update status
-                    clickStatusLbl.setForeground(Color.red);
-                    clickStatusLbl.setText(stoppedString);
-                }
+            	stopClickLogic();
             }
         });
 
@@ -468,4 +505,5 @@ public class MainFrame extends JFrame
         SwingUtilities.replaceUIActionMap((JComponent) mainPanel, actionMap);
         SwingUtilities.replaceUIInputMap((JComponent) mainPanel, JComponent.WHEN_IN_FOCUSED_WINDOW, keyMap);
     }
+    
 }
