@@ -105,6 +105,23 @@ public class MainFrame extends JFrame
 
     private boolean getMouse = false; // control the updateMousePosition() thread
 
+    private String license = "MIT License\n\nCopyright (c) 2011 Douglas Chidester\n\n" +
+                            "Permission is hereby granted, free of charge, to any person obtaining a copy\n" +
+                            "of this software and associated documentation files (the \"Software\"), to deal\n" +
+                            "in the Software without restriction, including without limitation the rights\n" +
+                            "to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n" +
+                            "copies of the Software, and to permit persons to whom the Software is\n" +
+                            "furnished to do so, subject to the following conditions:\n\n" +
+                            "The above copyright notice and this permission notice shall be included in all\n" +
+                            "copies or substantial portions of the Software.\n\n" +
+                            "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n" +
+                            "IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n" +
+                            "FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n" +
+                            "AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n" +
+                            "LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n" +
+                            "OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n" +
+                            "SOFTWARE.";
+
     public MainFrame()
     {
         super();
@@ -239,7 +256,7 @@ public class MainFrame extends JFrame
             public void actionPerformed(ActionEvent e)
             {
                 // show author and version if user clicks: Help -> About
-                JOptionPane.showMessageDialog(null, "Created by " + author + "\nVersion " + version, "About",
+                JOptionPane.showMessageDialog(null, "Created by " + author + "\nVersion " + version + "\n\n\n\n" + license, "About",
                         JOptionPane.INFORMATION_MESSAGE, new ImageIcon(this.getClass().getResource(imagePath+"person.png")));
             }
         });
@@ -396,7 +413,7 @@ public class MainFrame extends JFrame
         });
         updateMouseCoords.start();
     }
-    
+
     /**
      * Function to ensure common behavior between button and hotkey.
      * Could be done as a "Handler" class to be more object oriented...
@@ -406,7 +423,7 @@ public class MainFrame extends JFrame
     	int x = Integer.parseInt(xcoordTF.getText());
     	int y = Integer.parseInt(ycoordTF.getText());
     	boolean clickStatus = false;
-    	
+
     	// if not clicking
     	if(!clicker.isClicking())
         {
@@ -420,13 +437,13 @@ public class MainFrame extends JFrame
     			JOptionPane.showMessageDialog(null, invalidCoordsMsg, "Coordinate Error",
                         JOptionPane.ERROR_MESSAGE);
     		}
-    		
+
     		if(clickStatus)
     		{
     			// update status
                 clickStatusLbl.setForeground(new Color(0, 200, 100));
                 clickStatusLbl.setText(runningString);
-                
+
                 // disable start button
                 startBtn.setEnabled(false);
                 // enable stop button
@@ -437,7 +454,7 @@ public class MainFrame extends JFrame
         	JOptionPane.showMessageDialog(null, "The autoclicker is already running.", "Already Running",
                     JOptionPane.ERROR_MESSAGE);
     }
-    
+
     /**
      * Function to ensure common behavior between button and hotkey.
      * Could be done as a "Handler" class to be more object oriented...
@@ -449,11 +466,11 @@ public class MainFrame extends JFrame
         {
         	// stop clicking
         	clicker.stopClicking();
-            
+
         	// update status
             clickStatusLbl.setForeground(Color.red);
             clickStatusLbl.setText(stoppedString);
-            
+
             // enable start button
             startBtn.setEnabled(true);
             // disable stop button
@@ -474,7 +491,7 @@ public class MainFrame extends JFrame
                 startClickLogic();
             }
         });
-        
+
         // Stop clicking when hotkey is pressed
         keyMap.put(KeyStroke.getKeyStroke(stopHotKey , 0), "action_stop");
         actionMap.put("action_stop", new AbstractAction() {
@@ -505,5 +522,5 @@ public class MainFrame extends JFrame
         SwingUtilities.replaceUIActionMap((JComponent) mainPanel, actionMap);
         SwingUtilities.replaceUIInputMap((JComponent) mainPanel, JComponent.WHEN_IN_FOCUSED_WINDOW, keyMap);
     }
-    
+
 }
