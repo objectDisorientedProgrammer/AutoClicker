@@ -77,7 +77,7 @@ public class MainFrame extends JFrame
     private static final int MIN_Y_COORD = 0;
     private String invalidCoordsMsg = "Please enter an x and y coordinate greater than (" + MIN_X_COORD + ", " + MIN_Y_COORD + ").";
 
-    private String getMouseCoordsHotkeyString = "(F8)";
+    private String getMouseCoordsHotkeyString = "F8";
     private int getMouseCoordsHotKey = KeyEvent.VK_F8;
     private int mouseUpdateDelay = 50;    // in milliseconds
     private int clickDelay = 1000;        // in milliseconds
@@ -88,10 +88,10 @@ public class MainFrame extends JFrame
     private String runningString = "Running";
     private Color buttonColor;
     private String startBtnString = "Start ";
-    private String startBtnHotkeyString = "(F6)";
+    private String startBtnHotkeyString = "F6";
     private int startHotKey = KeyEvent.VK_F6;
     private String stopBtnString = "Stop ";
-    private String stopBtnHotkeyString = "(F7)";
+    private String stopBtnHotkeyString = "F7";
     private int stopHotKey = KeyEvent.VK_F7;
     private String clickSpeedString = "Click delay:";
     private String clickTestBtnString = "Test";
@@ -196,6 +196,7 @@ public class MainFrame extends JFrame
             {
                 // create a window with a button to launch the github website
                 JButton update = new JButton("Get Update");
+                update.setFont(new Font("Tahoma", Font.BOLD, 15));
                 update.addActionListener(new ActionListener()
                 {
                     @Override
@@ -214,7 +215,7 @@ public class MainFrame extends JFrame
                 });
                 // show version number and upgrade instructions
                 JTextArea updateInfo = new JTextArea(
-                        "Download the latest jar file from the releases page if you have an older version.\n\nCurrent Version: " + version);
+                        "Download the latest release by clicking the button below.\n\nCurrent Version: " + version);
                 updateInfo.setEditable(false);
                 updateInfo.setLineWrap(true);
                 updateInfo.setWrapStyleWord(true);
@@ -275,7 +276,7 @@ public class MainFrame extends JFrame
     {
         // create xcoord button
         xcoordTF = new JTextField(4);
-        xcoordTF.setToolTipText("Shortcut key: " + getMouseCoordsHotkeyString);
+        xcoordTF.setToolTipText("Shortcut key " + getMouseCoordsHotkeyString);
         xcoordTF.setText("" + xcoord);
 
         // create xcoord label
@@ -284,7 +285,7 @@ public class MainFrame extends JFrame
 
         // create ycoord button
         ycoordTF = new JTextField(4);
-        ycoordTF.setToolTipText("Shortcut key: " + getMouseCoordsHotkeyString);
+        ycoordTF.setToolTipText("Shortcut key " + getMouseCoordsHotkeyString);
         ycoordTF.setText("" + ycoord);
 
         // create ycoord label
@@ -300,7 +301,7 @@ public class MainFrame extends JFrame
         // create start button
         startBtn = new JButton(startBtnString);
         startBtn.setBackground(buttonColor);
-        startBtn.setToolTipText("Shortcut key: "+startBtnHotkeyString);
+        startBtn.setToolTipText("Shortcut key "+startBtnHotkeyString);
         startBtn.addActionListener(new ActionListener()
         {
 			@Override
@@ -312,7 +313,7 @@ public class MainFrame extends JFrame
         // create stop button
         stopBtn = new JButton(stopBtnString);
         stopBtn.setBackground(buttonColor);
-        stopBtn.setToolTipText("Shortcut key: "+stopBtnHotkeyString);
+        stopBtn.setToolTipText("Shortcut key "+stopBtnHotkeyString);
         stopBtn.addActionListener(new ActionListener()
         {
             @Override
