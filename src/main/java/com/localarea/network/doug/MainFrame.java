@@ -57,6 +57,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.ActionMapUIResource;
 
+@SuppressWarnings("serial")
 public class MainFrame extends JFrame
 {
     private AutoClicker clicker;
@@ -64,7 +65,7 @@ public class MainFrame extends JFrame
     private int frameWidth = 240;
     private int frameHeight = 270;
     private String programName = "Auto Clicker";
-    private String version = "0.99.9";
+    private String version = "1.0.0";
     private String author = "Douglas Chidester";
 
     private JTextField xcoordTF, ycoordTF, clickSpeedTF;
@@ -102,6 +103,7 @@ public class MainFrame extends JFrame
     private String hotkeyMessage = "Hotkeys:\n" + startBtnHotkeyString + " to start.\n" + stopBtnHotkeyString + " to stop.\n"
              + getMouseCoordsHotkeyString + " to get the current mouse position.\n\n";
     private String clickDelayMessage = "Click Delay:\nDelay time is in milliseconds (ms).";
+    private final String githubReleasesWebpage = "https://github.com/objectDisorientedProgrammer/AutoClicker/releases";
 
     private boolean getMouse = false; // control the updateMousePosition() thread
 
@@ -130,7 +132,7 @@ public class MainFrame extends JFrame
         setFrameAttributes();
         initializePanel();
 
-        buttonColor = new Color(102, 204, 255); // RGB
+        buttonColor = new Color(102, 204, 255); // light blue
         createGUIelements();
         createAndAddMenuBar();
         addAllComponentsToFrame();
@@ -205,7 +207,7 @@ public class MainFrame extends JFrame
                         try
                         {
                             java.awt.Desktop.getDesktop().browse(
-                                    java.net.URI.create("https://github.com/objectDisorientedProgrammer/AutoClicker/releases"));
+                                    java.net.URI.create(githubReleasesWebpage));
                         } catch(IOException e1)
                         {
                             JOptionPane.showMessageDialog(null, "Could not connect.", "Connection Error",
@@ -451,10 +453,6 @@ public class MainFrame extends JFrame
                 stopBtn.setEnabled(true);
     		}
         }
-        //else
-        	
-        	//JOptionPane.showMessageDialog(null, "The autoclicker is already running.", "Already Running",
-            //        JOptionPane.ERROR_MESSAGE);
     }
 
     /**
