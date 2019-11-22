@@ -130,7 +130,7 @@ public class MainFrame extends JFrame
         setFrameAttributes();
         initializePanel();
 
-        buttonColor = new Color(225, 225, 225); // RGB
+        buttonColor = new Color(102, 204, 255); // RGB
         createGUIelements();
         createAndAddMenuBar();
         addAllComponentsToFrame();
@@ -451,9 +451,10 @@ public class MainFrame extends JFrame
                 stopBtn.setEnabled(true);
     		}
         }
-        else
-        	JOptionPane.showMessageDialog(null, "The autoclicker is already running.", "Already Running",
-                    JOptionPane.ERROR_MESSAGE);
+        //else
+        	
+        	//JOptionPane.showMessageDialog(null, "The autoclicker is already running.", "Already Running",
+            //        JOptionPane.ERROR_MESSAGE);
     }
 
     /**
