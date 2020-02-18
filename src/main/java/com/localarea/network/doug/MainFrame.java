@@ -403,8 +403,7 @@ public class MainFrame extends JFrame
                     {
                         mouseXY = MouseInfo.getPointerInfo().getLocation();
                         Thread.sleep(mouseUpdateDelay);
-                        mouseCoords.setText(Integer.toString((int) mouseXY.getX()) + ", "
-                                + Integer.toString((int) mouseXY.getY()));
+                        mouseCoords.setText(xcoordTFString + Integer.toString((int) mouseXY.getX()) + ", " + ycoordTFString + Integer.toString((int) mouseXY.getY()));
                     } catch(InterruptedException e)
                     {
                         mouseCoords.setText(e.getMessage());
