@@ -9,16 +9,28 @@ This project uses Gradle 3.4.1 (or newer?) as a build system.
 ## Building
 From the project root directory use this build command:
 
+    make all
+
+or
+
     gradle jar
 
 The generated jar file will be in /build/libs/AutoClicker-x.y.z.jar by default.
 
-To clean:
+To remove build artifacts:
+
+    make clean
+
+or
 
     gradle clean
 
 ## Running
 Either double click the jar file or open a terminal and use:
+
+    make run
+
+or
 
     java -jar AutoClicker.jar
 
