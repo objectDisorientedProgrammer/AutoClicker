@@ -17,7 +17,7 @@ or
 
 The generated jar file will be in /build/libs/AutoClicker-x.y.z.jar by default.
 
-To clean:
+To remove build artifacts:
 
     make clean
 
