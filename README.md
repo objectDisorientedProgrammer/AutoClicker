@@ -4,7 +4,7 @@ This stand-alone program will click automatically given coordinates and a click 
 Author: Doug Chidester
 
 ## Dependencies
-This project uses Gradle 3.4.1 (or newer?) as a build system.
+This project uses Gradle 4.4.1+ as a build system.
 
 ## Building
 From the project root directory use this build command:
