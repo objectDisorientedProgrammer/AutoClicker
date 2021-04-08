@@ -4,37 +4,26 @@ This stand-alone program will click automatically given coordinates and a click 
 Author: Doug Chidester
 
 ## Dependencies
-This project uses Gradle 4.4.1+ as a build system.
+Java 8+
+
+Gradle 4.4.1+
 
 ## Building
 From the project root directory use this build command:
 
-    make all
+    gradle build
 
-or
-
-    gradle jar
-
-The generated jar file will be in /build/libs/AutoClicker-x.y.z.jar by default.
+The generated jar file will be in **/build/libs/AutoClicker.jar** by default.
 
 To remove build artifacts:
-
-    make clean
-
-or
 
     gradle clean
 
 ## Running
 Either double click the jar file or open a terminal and use:
 
-    make run
-
-or
-
-    java -jar AutoClicker.jar
+    java -jar /build/libs/AutoClicker.jar
 
 Note: you may need to make the .jar executable on some systems:
 
-    chmod u+x AutoClicker.jar
-
+    chmod u+x /build/libs/AutoClicker.jar

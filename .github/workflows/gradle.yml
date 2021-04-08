@@ -1,26 +1,65 @@
-name: Java CI
+name: Java CI with Gradle
 
-on: [push]
+on:
+  push:
+    branches: [ mainline ]
+  pull_request:
+    branches: [ mainline ]
 
 jobs:
-  build:
-
+  job_linux:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        java: [ 8, 8.0.192, 11.0.x, 11.0.3, 12, 13 ]
+    name: Java ${{ matrix.java }}
     steps:
-    - uses: actions/checkout@v1
-    - name: Set up JDK 1.8
+    - uses: actions/checkout@v2
+    - name: Setup java
       uses: actions/setup-java@v1
       with:
-        java-version: 1.8
-    - name: Clean with Gradle
+        java-version: ${{ matrix.java }}
+    - name: Clean
       run: gradle clean
-    - name: Build with Gradle
-      run: gradle jar
-    
-    - name: Make clean
-      run: make clean
-    - name: Make all
-      run: make all
-    - name: Make run
-      run: make run
+    - name: Unit test
+      run: gradle test
+    - name: Build
+      run: gradle build
+  
+  job_windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        java: [ 8, 8.0.192, 11.0.x, 11.0.3, 12, 13 ]
+    name: Java ${{ matrix.java }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup java
+      uses: actions/setup-java@v1
+      with:
+        java-version: ${{ matrix.java }}
+    - name: Clean
+      run: gradle clean
+    - name: Unit test
+      run: gradle test
+    - name: Build
+      run: gradle build
+
+  job_mac:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        java: [ 8, 8.0.192, 11.0.x, 11.0.3, 12, 13 ]
+    name: Java ${{ matrix.java }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup java
+      uses: actions/setup-java@v1
+      with:
+        java-version: ${{ matrix.java }}
+    - name: Clean
+      run: gradle clean
+    - name: Unit test
+      run: gradle test
+    - name: Build
+      run: gradle build
