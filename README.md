@@ -13,7 +13,7 @@ From the project root directory use this build command:
 
     gradle build
 
-The generated jar file will be in /build/libs/AutoClicker.jar by default.
+The generated jar file will be in **/build/libs/AutoClicker.jar** by default.
 
 To remove build artifacts:
 
@@ -22,9 +22,8 @@ To remove build artifacts:
 ## Running
 Either double click the jar file or open a terminal and use:
 
-    java -jar AutoClicker.jar
+    java -jar /build/libs/AutoClicker.jar
 
 Note: you may need to make the .jar executable on some systems:
 
-    chmod u+x AutoClicker.jar
-
+    chmod u+x /build/libs/AutoClicker.jar
