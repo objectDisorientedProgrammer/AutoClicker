@@ -65,7 +65,7 @@ public class MainFrame extends JFrame
     private int frameWidth = 240;
     private int frameHeight = 270;
     private String programName = "Auto Clicker";
-    private String version = "1.0.0";
+    private String version = "1.0.1";
     private String author = "Douglas Chidester";
 
     private JTextField xcoordTF, ycoordTF, clickSpeedTF;
@@ -141,7 +141,6 @@ public class MainFrame extends JFrame
         updateMousePosition();
         // Enable hotkeys
         setupHotkeys();
-        //addKeyListener(new HotkeyListener());
 
         this.setVisible(true);
     }
@@ -158,7 +157,6 @@ public class MainFrame extends JFrame
     private void initializePanel()
     {
         mainPanel = new JPanel((new GridLayout(0, 2, 5, 5))); // rows, cols, horiz gap, vert gap
-        mainPanel.setBackground(new Color(200, 200, 200));    // RGB
     }
 
     private void createAndAddMenuBar()
@@ -306,11 +304,11 @@ public class MainFrame extends JFrame
         startBtn.setToolTipText("Shortcut key "+startBtnHotkeyString);
         startBtn.addActionListener(new ActionListener()
         {
-			@Override
-			public void actionPerformed(ActionEvent ae) {
-				startClickLogic();
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                startClickLogic();
+            }
+        });
 
         // create stop button
         stopBtn = new JButton(stopBtnString);
@@ -405,7 +403,8 @@ public class MainFrame extends JFrame
                     {
                         mouseXY = MouseInfo.getPointerInfo().getLocation();
                         Thread.sleep(mouseUpdateDelay);
-                        mouseCoords.setText(xcoordTFString + Integer.toString((int) mouseXY.getX()) + ", " + ycoordTFString + Integer.toString((int) mouseXY.getY()));
+                        mouseCoords.setText(xcoordTFString + Integer.toString((int) mouseXY.getX()) +
+                                            ", " + ycoordTFString + Integer.toString((int) mouseXY.getY()));
                     } catch(InterruptedException e)
                     {
                         mouseCoords.setText(e.getMessage());
