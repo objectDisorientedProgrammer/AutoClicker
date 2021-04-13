@@ -1,9 +1,12 @@
 apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'com.localarea.network.doug.Driver'
 
 jar {
     baseName = 'AutoClicker'
     manifest {
-        attributes 'Main-Class': 'com.localarea.network.doug.Driver'
+        attributes 'Main-Class': mainClassName
     }
 }
 

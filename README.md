@@ -20,10 +20,16 @@ To remove build artifacts:
     gradle clean
 
 ## Running
-Either double click the jar file or open a terminal and use:
+Double click the jar file or open a terminal and use:
+
+    gradle run
+    
+or
 
     java -jar /build/libs/AutoClicker.jar
 
 Note: you may need to make the .jar executable on some systems:
 
     chmod u+x /build/libs/AutoClicker.jar
+    
+
