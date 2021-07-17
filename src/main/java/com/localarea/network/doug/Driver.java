@@ -31,7 +31,7 @@ public class Driver
     {
         boolean status = false; // command line arg execution status
 
-        // if no command line args, assume application is running as a jarfile
+        // if no command line args, assume application is running as an GUI
         if (args.length == 0)
         {
             javax.swing.SwingUtilities.invokeLater(new Runnable()
@@ -56,14 +56,17 @@ public class Driver
             {
                 // help args
                 case "-h":
+                case "-H":
+                case "-help":
                 case "--help":
-                    System.out.println("Build the project and run `java -jar AutoClicker.jar` for the full featured GUI version.");
+                    System.out.println("Run `java -jar AutoClicker.jar` for the full featured GUI version.");
                     break;
                 // handle version args
                 case "-v":
                 case "-V":
+                case "-version":
                 case "--version":
-                    System.out.println(AutoClicker.programName + " version:" + AutoClicker.version);
+                    System.out.println(AutoClicker.programName + " version: '" + AutoClicker.version + "'");
                     break;
                 default:
                     System.out.println("Invalid option.");
