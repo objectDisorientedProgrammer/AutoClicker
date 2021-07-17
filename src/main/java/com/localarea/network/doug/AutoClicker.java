@@ -70,12 +70,12 @@ public class AutoClicker
                     
                     while(running)
                     {
-                    	// pause robot for N milliseconds
-                        robot.delay(clickDelay);
-
                         // perform click operation
                         robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
                         robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+
+                        // pause robot for N milliseconds
+                        robot.delay(clickDelay);
                     }
                 } catch(Exception e2)
                 {
