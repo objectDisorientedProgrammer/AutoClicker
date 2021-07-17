@@ -74,6 +74,7 @@ public class MainFrame extends JFrame
     private JLabel mouseCoords;
     private int xcoord = 0;
     private int ycoord = 0;
+    private static final int MAX_DELAY_MS = 60000; // milliseconds
     private static final int MIN_X_COORD = 0;
     private static final int MIN_Y_COORD = 0;
     private String invalidCoordsMsg = "Please enter an x and y coordinate greater than (" + MIN_X_COORD + ", " + MIN_Y_COORD + ").";
@@ -330,7 +331,7 @@ public class MainFrame extends JFrame
         // Textfield for time delay
         clickSpeedTF = new JTextField(4);
         clickSpeedTF.setText("" + clickDelay);
-        clickSpeedTF.setToolTipText("milliseconds");
+        clickSpeedTF.setToolTipText("0 to " + MAX_DELAY_MS + "ms");
 
         // Click counter label
         clickCountLbl = new JLabel(Integer.toString(clickCount));
@@ -421,21 +422,28 @@ public class MainFrame extends JFrame
      */
     private void startClickLogic()
     {
-    	int x = Integer.parseInt(xcoordTF.getText());
-    	int y = Integer.parseInt(ycoordTF.getText());
-    	boolean clickStatus = false;
+        int x = Integer.parseInt(xcoordTF.getText());
+        int y = Integer.parseInt(ycoordTF.getText());
+        int clickDelay = Integer.parseInt(clickSpeedTF.getText());
+        boolean clickStatus = false;
 
     	// if not clicking
     	if(!clicker.isClicking())
         {
-    		// if valid coords
-    		if(x > MIN_X_COORD && y > MIN_Y_COORD)
-    		{
-    			clickStatus = clicker.startClicking(x, y, Integer.parseInt(clickSpeedTF.getText()));
-    		}
-    		else
-    		{
-    			JOptionPane.showMessageDialog(null, invalidCoordsMsg, "Coordinate Error",
+            // Check click delay is within valid range
+            if(clickDelay > MAX_DELAY_MS)
+            {
+                JOptionPane.showMessageDialog(null, "Delay out of range. Must be 0 to " + MAX_DELAY_MS + " milliseconds.", "Click Delay Error",
+                            JOptionPane.ERROR_MESSAGE);
+            }
+            // if valid coords
+            else if(x > MIN_X_COORD && y > MIN_Y_COORD)
+            {
+                clickStatus = clicker.startClicking(x, y, clickDelay);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null, invalidCoordsMsg, "Coordinate Error",
                         JOptionPane.ERROR_MESSAGE);
     		}
 
