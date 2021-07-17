@@ -29,12 +29,55 @@ public class Driver
 {
     public static void main(String args[])
     {
-        javax.swing.SwingUtilities.invokeLater(new Runnable()
+        boolean status = false; // command line arg execution status
+
+        // if no command line args, assume application is running as an GUI
+        if (args.length == 0)
         {
-            public void run()
+            javax.swing.SwingUtilities.invokeLater(new Runnable()
             {
-                new MainFrame();
+                public void run()
+                {
+                    new MainFrame();
+                }
+            });
+        }
+        else
+            status = processCommand(args);
+    }
+
+    public static boolean processCommand(String args[])
+    {
+        boolean valid = true;
+
+        if(args.length == 1)
+        {
+            switch(args[0])
+            {
+                // help args
+                case "-h":
+                case "-H":
+                case "-help":
+                case "--help":
+                    System.out.println("Run `java -jar AutoClicker.jar` for the full featured GUI version.");
+                    break;
+                // handle version args
+                case "-v":
+                case "-V":
+                case "-version":
+                case "--version":
+                    System.out.println(AutoClicker.programName + " version: '" + AutoClicker.version + "'");
+                    break;
+                default:
+                    System.out.println("Invalid option.");
+                    valid = false;
+                    break;
             }
-        });
+        }
+        else
+            valid = false;
+
+        return valid;
     }
 }
+

@@ -64,9 +64,9 @@ public class MainFrame extends JFrame
 
     private int frameWidth = 240;
     private int frameHeight = 270;
-    private String programName = "Auto Clicker";
-    private String version = "1.0.1";
-    private String author = "Douglas Chidester";
+    private String programName = AutoClicker.programName;
+    private String version = AutoClicker.version;
+    private String author = AutoClicker.author;
 
     private JTextField xcoordTF, ycoordTF, clickSpeedTF;
     private JLabel xcoordLbl, ycoordLbl, clickSpeedLbl, clickCountLbl, clickStatusLbl;
