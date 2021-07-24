@@ -37,8 +37,8 @@ import java.awt.event.InputEvent;
 
 public class AutoClicker
 {
-    public static final String programName = "Auto Clicker";
-    public static final String version = "1.0.2";
+    public static final String programName = "AutoClicker";
+    public static final String version = "1.1.0";
     public static final String author = "Douglas Chidester";
 
     private boolean running = false; // control the autoclick() thread

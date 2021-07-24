@@ -23,9 +23,9 @@
 
 package com.localarea.network.doug;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
@@ -34,10 +34,15 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
 import java.io.IOException;
-
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
+import javax.swing.BoxLayout;
 import javax.swing.ComponentInputMap;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
@@ -50,7 +55,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
@@ -81,8 +85,8 @@ public class MainFrame extends JFrame
 
     private String getMouseCoordsHotkeyString = "F8";
     private int getMouseCoordsHotKey = KeyEvent.VK_F8;
-    private int mouseUpdateDelay = 50;    // in milliseconds
-    private int clickDelay = 1000;        // in milliseconds
+    private int mouseUpdateDelay = 50; // in milliseconds
+    private int clickDelay = 1000;     // in milliseconds
     private int clickCount = 0;
     private String xcoordTFString = "x:";
     private String ycoordTFString = "y:";
@@ -104,7 +108,6 @@ public class MainFrame extends JFrame
     private String hotkeyMessage = "Hotkeys:\n" + startBtnHotkeyString + " to start.\n" + stopBtnHotkeyString + " to stop.\n"
              + getMouseCoordsHotkeyString + " to get the current mouse position.\n\n";
     private String clickDelayMessage = "Click Delay:\nDelay time is in milliseconds (ms).";
-    private final String githubReleasesWebpage = "https://github.com/objectDisorientedProgrammer/AutoClicker/releases";
 
     private boolean getMouse = false; // control the updateMousePosition() thread
 
@@ -186,52 +189,125 @@ public class MainFrame extends JFrame
         helpMenu.setMnemonic(KeyEvent.VK_H);
         menuBar.add(helpMenu);
 
-        JMenuItem updateMenuItem = new JMenuItem("Updates", new ImageIcon(this.getClass().getResource(imagePath+"update.png")));
-        updateMenuItem.setMnemonic(KeyEvent.VK_U);
+        JMenuItem updateMenuItem = new JMenuItem("Check for updates",
+                new ImageIcon(this.getClass().getResource(imagePath+"update.png")));
+        updateMenuItem.setMnemonic(KeyEvent.VK_C);
         updateMenuItem.addActionListener(new ActionListener()
         {
-            private Dimension frameDimentions = new Dimension(240, 150);
-
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                // create a window with a button to launch the github website
-                JButton update = new JButton("Get Update");
-                update.setFont(new Font("Tahoma", Font.BOLD, 15));
-                update.addActionListener(new ActionListener()
+                try
                 {
-                    @Override
-                    public void actionPerformed(ActionEvent e)
+                    // Set up a REST GET query to the github API
+                    final String urlCommon = "objectDisorientedProgrammer/AutoClicker/";
+                    final String urlBase = "https://api.github.com/repos/" + urlCommon;
+                    URL tags = new URL(urlBase + "tags");
+                    HttpURLConnection conn = (HttpURLConnection) tags.openConnection();
+                    conn.setRequestMethod("GET");
+
+                    if(conn.getResponseCode() == HttpURLConnection.HTTP_OK)
                     {
-                        try
+                        // Collect the response
+                        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                        StringBuffer response = new StringBuffer();
+                        String line = null;
+                        while((line = in.readLine()) != null)
                         {
-                            java.awt.Desktop.getDesktop().browse(
-                                    java.net.URI.create(githubReleasesWebpage));
-                        } catch(IOException e1)
+                            response.append(line);
+                        }
+                        in.close();
+
+                        // Parse the json blob to find the most recent release version
+                        /* Currently need to skip over the first three entries because
+                           I changed tag naming convention from vX.Y.Z to X.Y.Z...
+                        */
+                        int ver = 0;
+                        String sub = "";
+                        // skip 3 "vX.Y.Z" tags
+                        // skip first "vX.Y.Z" in the response string
+                        ver = response.toString().indexOf("name");
+                        sub = response.substring(ver+1);
+                        // skip the remaining "vX.Y.Z" in the substring
+                        for (int i = 0; i < 2; i++)
                         {
-                            JOptionPane.showMessageDialog(null, "Could not connect.", "Connection Error",
-                                    JOptionPane.ERROR_MESSAGE);
+                            ver = sub.indexOf("name");
+                            sub = sub.substring(ver+1);
+						}
+                        sub = sub.substring(ver+7);
+                        ver = sub.indexOf('"');
+                        String latest = sub.substring(0, ver);
+                        latest = latest.trim();
+                        final String urlVersion = latest;
+
+                        // parse each version string to compare X.Y.Z in order to determine "up to date-ness"
+                        String[] currentVersion = AutoClicker.version.trim().split("\\.");
+                        String[] latestVersion = latest.split("\\.");
+
+                        // if the queried latest version is larger than the current application version, prompt the user to update
+                        if(Integer.parseInt(latestVersion[0]) > Integer.parseInt(currentVersion[0])
+                                || Integer.parseInt(latestVersion[1]) > Integer.parseInt(currentVersion[1])
+                                || Integer.parseInt(latestVersion[2]) > Integer.parseInt(currentVersion[2]))
+                        {
+                            // Create a fancy panel to show current and new versions along with a
+                            // button to take the user to the download page
+                            JPanel update = new JPanel();
+                            update.setLayout(new BoxLayout(update, BoxLayout.Y_AXIS));
+                            JLabel curver = new JLabel("Current version: " + AutoClicker.version);
+                            curver.setAlignmentX(Component.CENTER_ALIGNMENT);
+                            update.add(curver);
+
+                            JLabel newver = new JLabel("New version: " + latest);
+                            newver.setAlignmentX(Component.CENTER_ALIGNMENT);
+                            update.add(newver);
+
+                            update.add(new JLabel(" ")); // poor man's padding
+
+                            // TODO replace image?
+                            JButton download = new JButton(
+                                    new ImageIcon(this.getClass().getResource(imagePath+"update.png")));
+                            download.setAlignmentX(Component.CENTER_ALIGNMENT);
+                            download.addActionListener(new ActionListener()
+                            {
+                                @Override
+                                public void actionPerformed(ActionEvent e)
+                                {
+                                    try {
+                                        final String dl = "https://www.github.com/" + urlCommon +
+                                                "releases/download/" + urlVersion + "/"
+                                                + AutoClicker.programName + ".jar";
+                                        Desktop.getDesktop().browse(new URI(dl));
+                                    } catch (Exception e1) {
+                                        JOptionPane.showMessageDialog(null, e1.getMessage(), "URL ERROR",
+                                                JOptionPane.ERROR_MESSAGE, null);
+                                    }
+                                }
+                            });
+                            update.add(download);
+
+                            update.add(new JLabel(" ")); // poor man's padding
+
+                            // Display the update message window
+                            Object[] options = { "Close" };
+                            JOptionPane.showOptionDialog(null, update, "Update Available", JOptionPane.DEFAULT_OPTION,
+                                    JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+                        }
+                        else
+                        {
+                            // Program is up to date - inform the user
+                            Object[] opt = { "Great" };
+                            JOptionPane.showOptionDialog(null, "Version: "+ AutoClicker.version, "Up to date",
+                                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opt, opt[0]);
                         }
                     }
-                });
-                // show version number and upgrade instructions
-                JTextArea updateInfo = new JTextArea(
-                        "Download the latest release by clicking the button below.\n\nCurrent Version: " + version);
-                updateInfo.setEditable(false);
-                updateInfo.setLineWrap(true);
-                updateInfo.setWrapStyleWord(true);
-                updateInfo.setMinimumSize(frameDimentions);
-
-                JFrame f = new JFrame("Check for updates");
-                f.setLocationRelativeTo(null);
-                f.setSize(frameDimentions);
-                f.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-                f.setLayout(new BorderLayout(10, 10));
-
-                f.getContentPane().add(updateInfo, BorderLayout.PAGE_START);
-                f.getContentPane().add(update, BorderLayout.PAGE_END);
-
-                f.setVisible(true);
+                    else
+                    {
+                        System.out.println("REST GET error...");
+                    }
+                } catch(IOException e1)
+                {
+                    e1.printStackTrace();
+                }
             }
         });
         helpMenu.add(updateMenuItem);
