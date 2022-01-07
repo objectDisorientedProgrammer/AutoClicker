@@ -5,10 +5,7 @@ Author: Doug Chidester
 
 ## Tips
 The main application is a graphical interface, however, there are several
-commands supported from a command line interface.
-
-	-h, -H, -help, --help          Print help text.
-	-v, -V, -version, --version    Print version information.
+commands supported from a command line interface. Use `java -jar AutoClicker.jar -h` for more information.
 
 ## Dependencies
 Java 8+

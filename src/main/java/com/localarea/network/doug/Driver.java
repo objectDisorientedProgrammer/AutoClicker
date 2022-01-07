@@ -27,6 +27,10 @@ package com.localarea.network.doug;
 
 public class Driver
 {
+    private static String[] cmdLineHelpArgs = { "-h", "-help", "--help" };
+    private static String[] cmdLineVersionArgs = { "-v", "-version", "--version" };
+    private static String[] cmdLineLicenseArgs = { "-copyright", "--copyright", "-license", "--license" };
+
     public static void main(String args[])
     {
         boolean status = false; // command line arg execution status
@@ -46,27 +50,49 @@ public class Driver
             status = processCommand(args);
     }
 
+    private static String createHelpTextEntry(String[] options, String helpText)
+    {
+        StringBuilder sb = new StringBuilder();
+
+        // indentation
+        sb.append("  ");
+        // option text
+        for(String s : options)
+            sb.append(s + " ");
+        // help text tip
+        sb.append(helpText);
+
+        return sb.toString();
+    }
+
+    private static void printHelpText()
+    {
+        System.out.println("AutoClicker command line interface options:\n");
+        System.out.println(createHelpTextEntry(cmdLineLicenseArgs, "to display the software license."));
+        System.out.println(createHelpTextEntry(cmdLineHelpArgs, "to show this help message."));
+        System.out.println(createHelpTextEntry(cmdLineVersionArgs, "to show version information."));
+        System.out.println("\nRun `java -jar AutoClicker.jar` for the full featured GUI version.\n");
+    }
+
     public static boolean processCommand(String args[])
     {
         boolean valid = true;
 
         if(args.length == 1)
         {
-            switch(args[0])
+            switch(args[0].toLowerCase())
             {
                 // help args
                 case "-h":
-                case "-H":
                 case "-help":
                 case "--help":
-                    System.out.println("Run `java -jar AutoClicker.jar` for the full featured GUI version.");
+                    printHelpText();
                     break;
                 // handle version args
                 case "-v":
-                case "-V":
                 case "-version":
                 case "--version":
-                    System.out.println(AutoClicker.programName + " version: '" + AutoClicker.version + "'");
+                    System.out.println(AutoClicker.programName + " version: " + AutoClicker.version);
                     break;
                 default:
                     System.out.println("Invalid option.");
