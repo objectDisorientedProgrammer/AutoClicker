@@ -278,7 +278,7 @@ public class MainFrame extends JFrame
                                                 + AutoClicker.programName + ".jar";
                                         Desktop.getDesktop().browse(new URI(dl));
                                     } catch (Exception e1) {
-                                        JOptionPane.showMessageDialog(null, e1.getMessage(), "URL ERROR",
+                                        JOptionPane.showMessageDialog(getMainWindow(), e1.getMessage(), "URL ERROR",
                                                 JOptionPane.ERROR_MESSAGE, null);
                                     }
                                 }
@@ -289,14 +289,14 @@ public class MainFrame extends JFrame
 
                             // Display the update message window
                             Object[] options = { "Close" };
-                            JOptionPane.showOptionDialog(null, update, "Update Available", JOptionPane.DEFAULT_OPTION,
+                            JOptionPane.showOptionDialog(getMainWindow(), update, "Update Available", JOptionPane.DEFAULT_OPTION,
                                     JOptionPane.WARNING_MESSAGE, null, options, options[0]);
                         }
                         else
                         {
                             // Program is up to date - inform the user
                             Object[] opt = { "Great" };
-                            JOptionPane.showOptionDialog(null, "Version: "+ AutoClicker.version, "Up to date",
+                            JOptionPane.showOptionDialog(getMainWindow(), "Version: "+ AutoClicker.version, "Up to date",
                                     JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opt, opt[0]);
                         }
                     }
@@ -320,7 +320,7 @@ public class MainFrame extends JFrame
             public void actionPerformed(ActionEvent e)
             {
                 // show basic use instructions if user clicks: Help -> Getting Started
-                JOptionPane.showMessageDialog(null, hotkeyMessage+clickDelayMessage, "Tips & Tricks",
+                JOptionPane.showMessageDialog(getMainWindow(), hotkeyMessage+clickDelayMessage, "Tips & Tricks",
                         JOptionPane.PLAIN_MESSAGE, new ImageIcon(this.getClass().getResource(imagePath+"help64.png")));
             }
         });
@@ -334,7 +334,7 @@ public class MainFrame extends JFrame
             public void actionPerformed(ActionEvent e)
             {
                 // show author and version if user clicks: Help -> About
-                JOptionPane.showMessageDialog(null, "Created by " + author + "\nVersion " + version + "\n\n\n\n" + license, "About",
+                JOptionPane.showMessageDialog(getMainWindow(), "Created by " + author + "\nVersion " + version + "\n\n\n\n" + license, "About",
                         JOptionPane.INFORMATION_MESSAGE, new ImageIcon(this.getClass().getResource(imagePath+"person.png")));
             }
         });
@@ -509,7 +509,7 @@ public class MainFrame extends JFrame
             // Check click delay is within valid range
             if(clickDelay > MAX_DELAY_MS)
             {
-                JOptionPane.showMessageDialog(null, "Delay out of range. Must be 0 to " + MAX_DELAY_MS + " milliseconds.", "Click Delay Error",
+                JOptionPane.showMessageDialog(getMainWindow(), "Delay out of range. Must be 0 to " + MAX_DELAY_MS + " milliseconds.", "Click Delay Error",
                             JOptionPane.ERROR_MESSAGE);
             }
             // if valid coords
@@ -519,7 +519,7 @@ public class MainFrame extends JFrame
             }
             else
             {
-                JOptionPane.showMessageDialog(null, invalidCoordsMsg, "Coordinate Error",
+                JOptionPane.showMessageDialog(getMainWindow(), invalidCoordsMsg, "Coordinate Error",
                         JOptionPane.ERROR_MESSAGE);
     		}
 
@@ -603,6 +603,11 @@ public class MainFrame extends JFrame
 
         SwingUtilities.replaceUIActionMap((JComponent) mainPanel, actionMap);
         SwingUtilities.replaceUIInputMap((JComponent) mainPanel, JComponent.WHEN_IN_FOCUSED_WINDOW, keyMap);
+    }
+    
+    public JFrame getMainWindow()
+    {
+        return this;
     }
 
 }
