@@ -32,7 +32,7 @@ public class Driver
 {
     private static String[] cmdLineHelpArgs = { "-h", "-help", "--help" };
     private static String[] cmdLineVersionArgs = { "-v", "-version", "--version" };
-    private static String[] cmdLineLicenseArgs = { "-copyright", "--copyright", "-license", "--license" };
+    private static String[] cmdLineLicenseArgs = { "-copyright", "--copyright", "-license", "--license", "-copyleft", "--copyleft" };
 
     public static void main(String args[])
     {
@@ -90,11 +90,11 @@ public class Driver
             }
             else if (Arrays.asList(cmdLineVersionArgs).contains(arg))
             {
-                System.out.println(AutoClicker.programName + " version: " + AutoClicker.version);
+                System.out.println(Metadata.programName + " version: " + Metadata.version);
             }
             else if (Arrays.asList(cmdLineLicenseArgs).contains(arg))
             {
-                System.out.println(/* ApplicationMetadata.licenseText */"TODO: MIT license");
+                System.out.println(Metadata.license);
             }
             else
             {

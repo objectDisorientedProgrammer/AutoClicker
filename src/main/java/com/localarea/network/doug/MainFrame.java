@@ -68,9 +68,9 @@ public class MainFrame extends JFrame
 
     private int frameWidth = 240;
     private int frameHeight = 270;
-    private String programName = AutoClicker.programName;
-    private String version = AutoClicker.version;
-    private String author = AutoClicker.author;
+    private String programName = Metadata.programName;
+    private String version = Metadata.version;
+    private String author = Metadata.author;
 
     private JTextField xcoordTF, ycoordTF, clickSpeedTF;
     private JLabel xcoordLbl, ycoordLbl, clickSpeedLbl, clickCountLbl, clickStatusLbl;
@@ -110,23 +110,6 @@ public class MainFrame extends JFrame
     private String clickDelayMessage = "Click Delay:\nDelay time is in milliseconds (ms).";
 
     private boolean getMouse = false; // control the updateMousePosition() thread
-
-    private String license = "MIT License\n\nCopyright (c) 2011 Douglas Chidester\n\n" +
-                            "Permission is hereby granted, free of charge, to any person obtaining a copy\n" +
-                            "of this software and associated documentation files (the \"Software\"), to deal\n" +
-                            "in the Software without restriction, including without limitation the rights\n" +
-                            "to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n" +
-                            "copies of the Software, and to permit persons to whom the Software is\n" +
-                            "furnished to do so, subject to the following conditions:\n\n" +
-                            "The above copyright notice and this permission notice shall be included in all\n" +
-                            "copies or substantial portions of the Software.\n\n" +
-                            "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n" +
-                            "IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n" +
-                            "FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n" +
-                            "AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n" +
-                            "LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n" +
-                            "OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n" +
-                            "SOFTWARE.";
 
     public MainFrame()
     {
@@ -241,7 +224,7 @@ public class MainFrame extends JFrame
                         final String urlVersion = latest;
 
                         // parse each version string to compare X.Y.Z in order to determine "up to date-ness"
-                        String[] currentVersion = AutoClicker.version.trim().split("\\.");
+                        String[] currentVersion = Metadata.version.trim().split("\\.");
                         String[] latestVersion = latest.split("\\.");
 
                         // if the queried latest version is larger than the current application version, prompt the user to update
@@ -253,7 +236,7 @@ public class MainFrame extends JFrame
                             // button to take the user to the download page
                             JPanel update = new JPanel();
                             update.setLayout(new BoxLayout(update, BoxLayout.Y_AXIS));
-                            JLabel curver = new JLabel("Current version: " + AutoClicker.version);
+                            JLabel curver = new JLabel("Current version: " + Metadata.version);
                             curver.setAlignmentX(Component.CENTER_ALIGNMENT);
                             update.add(curver);
 
@@ -275,7 +258,7 @@ public class MainFrame extends JFrame
                                     try {
                                         final String dl = "https://www.github.com/" + urlCommon +
                                                 "releases/download/" + urlVersion + "/"
-                                                + AutoClicker.programName + ".jar";
+                                                + Metadata.programName + ".jar";
                                         Desktop.getDesktop().browse(new URI(dl));
                                     } catch (Exception e1) {
                                         JOptionPane.showMessageDialog(getMainWindow(), e1.getMessage(), "URL ERROR",
@@ -296,7 +279,7 @@ public class MainFrame extends JFrame
                         {
                             // Program is up to date - inform the user
                             Object[] opt = { "Great" };
-                            JOptionPane.showOptionDialog(getMainWindow(), "Version: "+ AutoClicker.version, "Up to date",
+                            JOptionPane.showOptionDialog(getMainWindow(), "Version: "+ Metadata.version, "Up to date",
                                     JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opt, opt[0]);
                         }
                     }
@@ -334,7 +317,7 @@ public class MainFrame extends JFrame
             public void actionPerformed(ActionEvent e)
             {
                 // show author and version if user clicks: Help -> About
-                JOptionPane.showMessageDialog(getMainWindow(), "Created by " + author + "\nVersion " + version + "\n\n\n\n" + license, "About",
+                JOptionPane.showMessageDialog(getMainWindow(), "Created by " + author + "\nVersion " + version + "\n\n\n\n" + Metadata.license, "About",
                         JOptionPane.INFORMATION_MESSAGE, new ImageIcon(this.getClass().getResource(imagePath+"person.png")));
             }
         });
