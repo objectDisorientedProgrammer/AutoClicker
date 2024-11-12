@@ -37,10 +37,6 @@ import java.awt.event.InputEvent;
 
 public class AutoClicker
 {
-    public static final String programName = "AutoClicker";
-    public static final String version = "1.1.1";
-    public static final String author = "Douglas Chidester";
-
     private boolean running = false; // control the autoclick() thread
     private Robot robot;
     private Thread clickThread;

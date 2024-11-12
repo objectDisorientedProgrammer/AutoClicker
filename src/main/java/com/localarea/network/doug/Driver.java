@@ -25,11 +25,14 @@
 
 package com.localarea.network.doug;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Driver
 {
     private static String[] cmdLineHelpArgs = { "-h", "-help", "--help" };
     private static String[] cmdLineVersionArgs = { "-v", "-version", "--version" };
-    private static String[] cmdLineLicenseArgs = { "-copyright", "--copyright", "-license", "--license" };
+    private static String[] cmdLineLicenseArgs = { "-copyright", "--copyright", "-license", "--license", "-copyleft", "--copyleft" };
 
     public static void main(String args[])
     {
@@ -80,28 +83,30 @@ public class Driver
 
         if(args.length == 1)
         {
-            switch(args[0].toLowerCase())
+            String arg = args[0].toLowerCase();
+            if (Arrays.asList(cmdLineHelpArgs).contains(arg))
             {
-                // help args
-                case "-h":
-                case "-help":
-                case "--help":
-                    printHelpText();
-                    break;
-                // handle version args
-                case "-v":
-                case "-version":
-                case "--version":
-                    System.out.println(AutoClicker.programName + " version: " + AutoClicker.version);
-                    break;
-                default:
-                    System.out.println("Invalid option.");
-                    valid = false;
-                    break;
+                printHelpText();
+            }
+            else if (Arrays.asList(cmdLineVersionArgs).contains(arg))
+            {
+                System.out.println(Metadata.programName + " version: " + Metadata.version);
+            }
+            else if (Arrays.asList(cmdLineLicenseArgs).contains(arg))
+            {
+                System.out.println(Metadata.license);
+            }
+            else
+            {
+                System.out.println("Invalid option: " + arg);
+                valid = false;
             }
         }
         else
+        {
+            System.out.println("Error: too many arguments.");
             valid = false;
+        }
 
         return valid;
     }
