@@ -25,6 +25,9 @@
 
 package com.localarea.network.doug;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Driver
 {
     private static String[] cmdLineHelpArgs = { "-h", "-help", "--help" };
@@ -80,28 +83,30 @@ public class Driver
 
         if(args.length == 1)
         {
-            switch(args[0].toLowerCase())
+            String arg = args[0].toLowerCase();
+            if (Arrays.asList(cmdLineHelpArgs).contains(arg))
             {
-                // help args
-                case "-h":
-                case "-help":
-                case "--help":
-                    printHelpText();
-                    break;
-                // handle version args
-                case "-v":
-                case "-version":
-                case "--version":
-                    System.out.println(AutoClicker.programName + " version: " + AutoClicker.version);
-                    break;
-                default:
-                    System.out.println("Invalid option.");
-                    valid = false;
-                    break;
+                printHelpText();
+            }
+            else if (Arrays.asList(cmdLineVersionArgs).contains(arg))
+            {
+                System.out.println(AutoClicker.programName + " version: " + AutoClicker.version);
+            }
+            else if (Arrays.asList(cmdLineLicenseArgs).contains(arg))
+            {
+                System.out.println(/* ApplicationMetadata.licenseText */"TODO: MIT license");
+            }
+            else
+            {
+                System.out.println("Invalid option: " + arg);
+                valid = false;
             }
         }
         else
+        {
+            System.out.println("Error: too many arguments.");
             valid = false;
+        }
 
         return valid;
     }
