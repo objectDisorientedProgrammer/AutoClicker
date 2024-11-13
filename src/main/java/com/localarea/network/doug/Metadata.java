@@ -24,7 +24,7 @@ package com.localarea.network.doug;
 public class Metadata
 {
     public static final String programName = "AutoClicker";
-    public static final String version = "1.1.2";
+    public static final String version = "1.1.3";
     public static final String author = "Douglas Chidester";
     public static final String license = "MIT License\n\nCopyright (c) 2011 " + author + "\n\n" +
                             "Permission is hereby granted, free of charge, to any person obtaining a copy\n" +
