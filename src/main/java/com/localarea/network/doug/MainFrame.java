@@ -309,6 +309,17 @@ public class MainFrame extends JFrame
         });
         helpMenu.add(helpMenuItem);
 
+        JMenuItem licenseMenuItem = new JMenuItem("License");
+        licenseMenuItem.setMnemonic(KeyEvent.VK_L);
+        licenseMenuItem.setToolTipText("Display software license");
+        licenseMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                JOptionPane.showMessageDialog(getMainWindow(), Metadata.license, "License", JOptionPane.PLAIN_MESSAGE);
+            }
+        });
+        helpMenu.add(licenseMenuItem);
+
         JMenuItem aboutMenuItem = new JMenuItem("About", new ImageIcon(this.getClass().getResource(imagePath+"about.png")));
         aboutMenuItem.setMnemonic(KeyEvent.VK_A);
         aboutMenuItem.addActionListener(new ActionListener()
@@ -317,7 +328,7 @@ public class MainFrame extends JFrame
             public void actionPerformed(ActionEvent e)
             {
                 // show author and version if user clicks: Help -> About
-                JOptionPane.showMessageDialog(getMainWindow(), "Created by " + author + "\nVersion " + version + "\n\n\n\n" + Metadata.license, "About",
+                JOptionPane.showMessageDialog(getMainWindow(), "Created by " + author + "\nVersion " + version, "About",
                         JOptionPane.INFORMATION_MESSAGE, new ImageIcon(this.getClass().getResource(imagePath+"person.png")));
             }
         });
