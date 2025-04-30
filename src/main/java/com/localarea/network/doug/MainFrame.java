@@ -39,7 +39,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URL;
+import java.net.URISyntaxException;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.BoxLayout;
@@ -185,8 +185,8 @@ public class MainFrame extends JFrame
                     // Set up a REST GET query to the github API
                     final String urlCommon = "objectDisorientedProgrammer/AutoClicker/";
                     final String urlBase = "https://api.github.com/repos/" + urlCommon;
-                    URL tags = new URL(urlBase + "tags");
-                    HttpURLConnection conn = (HttpURLConnection) tags.openConnection();
+                    URI tags = new URI(urlBase + "tags");
+                    HttpURLConnection conn = (HttpURLConnection) tags.toURL().openConnection();
                     conn.setRequestMethod("GET");
 
                     if(conn.getResponseCode() == HttpURLConnection.HTTP_OK)
@@ -287,7 +287,7 @@ public class MainFrame extends JFrame
                     {
                         System.out.println("REST GET error...");
                     }
-                } catch(IOException e1)
+                } catch(IOException | URISyntaxException e1)
                 {
                     e1.printStackTrace();
                 }
